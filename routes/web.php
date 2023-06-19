@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Providers\AuthServiceProvider;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
