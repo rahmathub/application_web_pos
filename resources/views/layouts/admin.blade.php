@@ -142,7 +142,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="#" class="brand-link">
       <img src="{{ asset('assets/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">Admin</span>
     </a>
@@ -160,18 +160,6 @@
         </div>
       </div>
 
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -186,32 +174,32 @@
             </a>
           </li>
 
-          {{-- Catalog --}}
+          {{-- Produk --}}
           <li class="nav-item">
-            <a href="{{ url('catalogs') }}" class="nav-link {{ request()->is('catalog') ? 'active' : '' }}">
+            <a href="{{ url('products') }}" class="nav-link {{ request()->is('Produk') ? 'active' : '' }}">
               <i class="nav-icon fas fa-edit"></i>
               <p>
-                Catalog
+                Produk
               </p>
             </a>
           </li>
 
-          {{-- Publisher --}}
+          {{-- Transaksi --}}
           <li class="nav-item">
-            <a href="{{ url('publishers') }}" class="nav-link {{ request()->is('publisher') ? 'active' : '' }}">
+            <a href="{{ url('publishers') }}" class="nav-link {{ request()->is('Transaksi') ? 'active' : '' }}">
               <i class="nav-icon fas fa-clipboard"></i>
               <p>
-                Publisher
+                Transaksi
               </p>
             </a>
           </li>
 
-          {{-- Author --}}
+          {{-- Rekap Transaksi --}}
           <li class="nav-item">
-            <a href="{{ url('authors') }}" class="nav-link {{ request()->is('author') ? 'active' : '' }}">
+            <a href="{{ url('authors') }}" class="nav-link {{ request()->is('Rekap Transaksi') ? 'active' : '' }}">
               <i class="nav-icon fas fa-copy"></i>
               <p>
-                Author
+                Rekap Transaksi
               </p>
             </a>
           </li>
