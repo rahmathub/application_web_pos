@@ -160,7 +160,7 @@
         </div>
       </div>
 
-      <li class="nav-header text-center">MENU ADMIN</li>
+      <li class="nav-header text-center" style="list-style: none">MENU ADMIN</li>
       
       <!-- Sidebar Menu -->
       <nav class="mt-2">

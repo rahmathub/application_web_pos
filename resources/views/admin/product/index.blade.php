@@ -31,8 +31,9 @@
                         <tr>
                             <th style="width: 10px">No</th>
                             <th class="text-center">Nama Produk</th>
-                            <th class="text-center">Harga</th>
-                            <th class="text-center">Stok</th>
+                            <th class="text-center">Harga Modal</th>
+                            <th class="text-center">Harga Penjualan</th>
+                            <th class="text-center">Stok Barang</th>
                             <th class="text-center">Action</th>
                         </tr>
                         </thead>
@@ -116,6 +117,7 @@
             {data: 'DT_RowIndex', class: 'text-center', orderable: false},
             {data: 'name_product', class: 'text-center', orderable: false},
             {data: 'price', class: 'text-center', orderable: false},
+            {data: 'price_deal', class: 'text-center', orderable: false},
             {data: 'qty', class: 'text-center', orderable: false},
             {render: function(index, row, data, meta){
                 return '\

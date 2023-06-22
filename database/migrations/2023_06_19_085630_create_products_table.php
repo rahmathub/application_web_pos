@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name_product');
-            $table->integer('price'); // Mengubah tipe data menjadi integer
-            $table->integer('qty');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('stock');
+            $table->unsignedBigInteger('category_id');
+            $table->string('price');
+            $table->string('photo')->nullable();
             $table->timestamps();
+    
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 

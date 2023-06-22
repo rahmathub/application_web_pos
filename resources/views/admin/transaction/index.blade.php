@@ -30,9 +30,9 @@
                         <thead>
                         <tr>
                             <th style="width: 10px">No</th>
-                            <th class="text-center">Nama Produk</th>
-                            <th class="text-center">Harga</th>
-                            <th class="text-center">Stok</th>
+                            <th class="text-center">Tanggal Transaksi</th>
+                            <th class="text-center">Total Barang</th>
+                            <th class="text-center">Total Transaksi</th>
                             <th class="text-center">Action</th>
                         </tr>
                         </thead>
@@ -109,14 +109,14 @@
     </script>
 
     <script type="text/javascript">
-        var actionUrl = '{{ url('products') }}';
-        var apiUrl = '{{ url('api/products') }}';
+        var actionUrl = '{{ url('transactions') }}';
+        var apiUrl = '{{ url('api/transactions') }}';
 
         var columns =  [
             {data: 'DT_RowIndex', class: 'text-center', orderable: false},
-            {data: 'name_product', class: 'text-center', orderable: false},
-            {data: 'price', class: 'text-center', orderable: false},
-            {data: 'qty', class: 'text-center', orderable: false},
+            {data: 'transaction_date', class: 'text-center', orderable: false},
+            {data: 'product_total', class: 'text-center', orderable: false},
+            {data: 'price_total', class: 'text-center', orderable: false},
             {render: function(index, row, data, meta){
                 return '\
                 <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, '+meta.row+')">\
