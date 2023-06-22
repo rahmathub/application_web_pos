@@ -9,10 +9,8 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    // protected $fillable = ['name', 'email', 'phone_number', 'address'];
 
-
-    public function product() {
+    public function products() {
         return $this->belongsTo('App\Models\Product', 'product_id');
     }
 }

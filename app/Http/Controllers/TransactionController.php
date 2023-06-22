@@ -12,7 +12,14 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.transaction.index');
+    }
+
+    public function api() {
+        $transactions = Transaction::all();
+        $datatables = datatables()->of($transactions)->addIndexColumn();
+
+        return $datatables->make(true);
     }
 
     /**

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | Dashboard</title>
+    <title id="app">@{{ pageTitle }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -160,6 +160,8 @@
         </div>
       </div>
 
+      <li class="nav-header text-center">MENU ADMIN</li>
+      
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -176,7 +178,7 @@
 
           {{-- Produk --}}
           <li class="nav-item">
-            <a href="{{ url('products') }}" class="nav-link {{ request()->is('Produk') ? 'active' : '' }}">
+            <a href="{{ url('products') }}" class="nav-link {{ request()->is('products') ? 'active' : '' }}">
               <i class="nav-icon fas fa-edit"></i>
               <p>
                 Produk
@@ -186,7 +188,7 @@
 
           {{-- Transaksi --}}
           <li class="nav-item">
-            <a href="{{ url('publishers') }}" class="nav-link {{ request()->is('Transaksi') ? 'active' : '' }}">
+            <a href="{{ url('transactions') }}" class="nav-link {{ request()->is('transactions') ? 'active' : '' }}">
               <i class="nav-icon fas fa-clipboard"></i>
               <p>
                 Transaksi
@@ -196,7 +198,7 @@
 
           {{-- Rekap Transaksi --}}
           <li class="nav-item">
-            <a href="{{ url('authors') }}" class="nav-link {{ request()->is('Rekap Transaksi') ? 'active' : '' }}">
+            <a href="{{ url('transaction_summaries') }}" class="nav-link {{ request()->is('transaction_summaries') ? 'active' : '' }}">
               <i class="nav-icon fas fa-copy"></i>
               <p>
                 Rekap Transaksi
@@ -269,6 +271,37 @@
     {{-- Script Axio  --}}
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    {{-- here script in the title your browser --}}
+    <script>
+      // Buat instance Vue
+      const app = new Vue({
+          el: '#app',
+          data: {
+              pageTitle: 'Admin | Dashboard', // Judul default
+          },
+          mounted() {
+              this.getPageTitle();
+          },
+          methods: {
+              getPageTitle() {
+                  // Ambil URL halaman saat ini
+                  const currentPage = window.location.pathname;
+  
+                  // Atur judul berdasarkan URL
+                  if (currentPage.endsWith('/products')) {
+                      this.pageTitle = 'Products';
+                  } else if (currentPage.endsWith('/transactions')) {
+                      this.pageTitle = 'Transaksi Produk';
+                  } else if (currentPage.endsWith('/transaction_summaries')) {
+                      this.pageTitle = 'Rekap Transaksi';
+                  }
+              }
+          }
+      });
+    </script>
+  
+  
+  
     @yield('js')
     </body>
 </html>
