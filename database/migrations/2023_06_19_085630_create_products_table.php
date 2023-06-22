@@ -17,7 +17,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('stock');
             $table->unsignedBigInteger('category_id');
-            $table->string('price');
+            $table->string('price_start');
+            $table->string('price_deal');
             $table->string('photo')->nullable();
             $table->timestamps();
     
