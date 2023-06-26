@@ -140,64 +140,63 @@
         $(function () {
             $("#datatable").DataTable();
         });
-
     </script>
-
-    <script type="text/javascript">
     
+    <script type="text/javascript">
         var actionUrl = '{{ url('products') }}';
         var apiUrl = '{{ url('api/products') }}';
-
+    
         var columns = [
-            {data: 'DT_RowIndex', class: 'text-center', orderable: false},
-            {data: 'name', className: 'text-center', orderable: false},
-            {data: 'category.name', className: 'text-center', orderable: false},
-            {data: 'price_start', className: 'text-center', orderable: false},
-            {data: 'price_deal', className: 'text-center', orderable: false},
-            {data: 'stock', className: 'text-center', orderable: false},
+            {
+                data: null,
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row, meta) {
+                    return meta.row + 1; // Menggunakan index baris sebagai nomor urut
+                },
+            },
+            { data: 'name', name: 'name', className: 'text-center' },
+            { data: 'category.name', className: 'text-center' },
+            { data: 'price_start', className: 'text-center' },
+            { data: 'price_deal', className: 'text-center' },
+            { data: 'stock', className: 'text-center' },
             {
                 data: 'photo',
-                render: function(data, type, row) {
-                    return '<img src="' + data + '" alt="Product Photo" class="img-thumbnail" style="width: 150px; height: auto;">';
+                render: function (data, type, row) {
+                    return (
+                        '<img src="' +
+                        data +
+                        '" alt="Product Photo" class="img-thumbnail" style="width: 150px; height: auto;">'
+                    );
                 },
                 orderable: false,
-                className: 'text-center'
+                className: 'text-center',
             },
-            {data: 'description', className: 'text-center', orderable: false},
+            { data: 'description', className: 'text-center' },
             {
-                render: function(data, type, row, meta) {
-                    return '\
-                    <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, ' + meta.row + ')">\
-                        Edit\
-                    </a>\
-                    <a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ' + row.id + ')">\
-                        Delete\
-                    </a>';
+                render: function (data, type, row, meta) {
+                    return `<a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, ${meta.row})">Edit</a>
+                    <a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ${row.id})">Delete</a>`;
                 },
                 orderable: false,
                 width: '200px',
-                className: 'text-center'
+                className: 'text-center',
             },
         ];
-    </script>
-
-
-    <script type="text/javascript">
+    
         var controller = new Vue({
             el: '#controller',
             data: {
                 datas: [],
                 data: {},
-                actionUrl: actionUrl,
-                apiUrl: apiUrl,
+                actionUrl,
+                apiUrl,
                 editProductId: null,
                 photoUrl: null,
                 deletePhoto: false,
-                data_category: [],
             },
-            mounted: function() {
+            mounted: function () {
                 this.datatable();
-                this.loadCategories();
             },
             methods: {
                 datatable() {
@@ -206,28 +205,23 @@
                         ajax: {
                             url: _this.apiUrl,
                             type: 'GET',
+                            dataSrc: function (response) {
+                                response.data.forEach(function (data, index) {
+                                    data.DT_RowIndex = index + 1;
+                                });
+                                return response.data;
+                            },
                         },
-                        columns: columns
-                    }).on('xhr', function() {
+                        columns: columns, // Menggunakan objek 'columns' yang telah didefinisikan sebelumnya
+                    }).on('xhr', function () {
                         _this.datas = _this.table.ajax.json().data;
+                        _this.table.draw(); // Menjalankan metode draw() setelah mengubah data
                     });
-                },
-                loadCategories() {
-                    const _this = this;
-                    axios.get('{{ url('categories') }}')
-                        .then(response => {
-                            _this.data_category = response.data;
-                        })
-                        .catch(error => {
-                            console.error(error);
-                            alert('Failed to fetch categories');
-                        });
                 },
                 editData(event, row) {
                     if (row >= 0 && row < this.datas.length) {
-                        this.data = Object.assign({}, this.datas[row]);
+                        this.data = { ...this.datas[row] };
                         this.editProductId = this.data.id;
-
                         if (this.data.photo) {
                             this.photoUrl = this.data.photo;
                         }
@@ -237,20 +231,19 @@
                     $('#modal-default').modal();
                 },
                 deleteData(event, id) {
-                    if (confirm("Are you sure?")) {
+                    if (confirm('Are you sure?')) {
                         const _this = this;
-                        const rowData = this.datas.find(data => data.id === id);
-
+                        const rowData = this.datas.find((data) => data.id === id);
                         axios
-                            .post(_this.actionUrl + '/' + id, { _method: 'DELETE' })
-                            .then(response => {
+                            .delete(_this.actionUrl + '/' + id)
+                            .then((response) => {
                                 alert('Data has been removed');
                                 _this.table
                                     .row($(event.target).closest('tr'))
                                     .remove()
                                     .draw(false);
                             })
-                            .catch(error => {
+                            .catch((error) => {
                                 console.error(error);
                                 alert('An error occurred while deleting data');
                             });
@@ -259,52 +252,61 @@
                 submitForm(event, id) {
                     event.preventDefault();
                     const _this = this;
-                    var actionUrl = !_this.editProductId ? _this.actionUrl : _this.actionUrl + '/' + id;
-
+                    var actionUrl = !_this.editProductId
+                        ? _this.actionUrl
+                        : _this.actionUrl + '/' + id;
+    
                     const formData = new FormData(event.target);
                     const photoInput = document.getElementById('photo');
-
+    
                     if (_this.editProductId) {
                         formData.append('_method', 'PUT');
                     }
-
+    
                     if (_this.deletePhoto) {
                         formData.append('delete_photo', '1');
                     }
-
+    
                     if (photoInput && photoInput.files.length > 0) {
                         const photoFile = photoInput.files[0];
                         formData.append('photo', photoFile);
                     }
-
-                    axios.post(actionUrl, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-                    .then(response => {
-                        if (_this.editProductId) {
-                            const editedDataIndex = _this.datas.findIndex(data => data.id === _this.editProductId);
-                            if (editedDataIndex !== -1) {
-                                Object.assign(_this.datas[editedDataIndex], response.data);
-                                _this.table.row(editedDataIndex).data(response.data).draw(false);
-
-                                // Update photo URL
-                                if (response.data.photo) {
-                                    _this.photoUrl = response.data.photo;
-                                } else {
-                                    _this.photoUrl = null;
+    
+                    axios
+                        .post(actionUrl, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then((response) => {
+                            if (_this.editProductId) {
+                                const editedDataIndex = _this.datas.findIndex(
+                                    (data) => data.id === _this.editProductId
+                                );
+                                if (editedDataIndex !== -1) {
+                                    Object.assign(_this.datas[editedDataIndex], response.data);
+                                    _this.table.row(editedDataIndex).data(response.data).draw(false);
+    
+                                    // Update photo URL
+                                    if (response.data.photo) {
+                                        _this.photoUrl = response.data.photo;
+                                    } else {
+                                        _this.photoUrl = null;
+                                    }
                                 }
+                            } else {
+                                _this.datas.push(response.data);
+                                _this.table.row.add(response.data).draw(false);
                             }
-                        } else {
-                            _this.datas.push(response.data);
-                            _this.table.row.add(response.data).draw(false);
-                        }
-                        _this.resetForm();
-                        $('#modal-default').modal('hide');
-                        alert('Data has been saved');
-                        _this.reloadTableData(); // Reload data after successful update
-                    })
+                            _this.resetForm();
+                            $('#modal-default').modal('hide');
+                            alert('Data has been saved');
+                            _this.reloadTableData(); // Reload data after successful update
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            alert('An error occurred while saving data');
+                        });
                 },
                 reloadTableData() {
                     const _this = this;
@@ -334,9 +336,12 @@
                     if (photoInput) {
                         photoInput.value = '';
                     }
-                }
-            }
+                },
+            },
         });
     </script>
+    
+      
+
 
 @endsection
