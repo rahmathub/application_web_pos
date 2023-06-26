@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    
+    {{-- icon --}}
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     
     @yield('css')
@@ -186,6 +190,26 @@
             </a>
           </li>
 
+          {{-- Kategory --}}
+          <li class="nav-item">
+            <a href="{{ url('categories') }}" class="nav-link {{ request()->is('categories') ? 'active' : '' }}">
+              <ion-icon class="nav-icon" name="git-compare-outline"></ion-icon>
+              <p>
+                Kategori
+              </p>
+            </a>
+          </li>
+
+          {{-- Costumers --}}
+          <li class="nav-item">
+            <a href="{{ url('customers') }}" class="nav-link {{ request()->is('customers') ? 'active' : '' }}">
+              <ion-icon class="nav-icon" name="finger-print-outline"></ion-icon>
+              <p>
+                Costumers
+              </p>
+            </a>
+          </li>
+
           {{-- Transaksi --}}
           <li class="nav-item">
             <a href="{{ url('transactions') }}" class="nav-link {{ request()->is('transactions') ? 'active' : '' }}">
@@ -289,8 +313,14 @@
   
                   // Atur judul berdasarkan URL
                   if (currentPage.endsWith('/products')) {
-                      this.pageTitle = 'Products';
-                  } else if (currentPage.endsWith('/transactions')) {
+                      this.pageTitle = 'Daftar Produk';
+                    } else if (currentPage.endsWith('/products/create')) {
+                      this.pageTitle = 'Buat Produk';
+                    } else if (currentPage.endsWith('/categories')) {
+                      this.pageTitle = 'Kategori';
+                    } else if (currentPage.endsWith('/customers')) {
+                      this.pageTitle = 'Costumers | Pelanggan';
+                    } else if (currentPage.endsWith('/transactions')) {
                       this.pageTitle = 'Transaksi Produk';
                   } else if (currentPage.endsWith('/transaction_summaries')) {
                       this.pageTitle = 'Rekap Transaksi';
