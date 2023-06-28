@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <a href="#" @click="addData()" class="btn btn-sm btn-primary pull-right">
-                                    Buat Costumer Baru
+                                    Buat Categori Baru
                                 </a>
                             </div>
                         </div>
