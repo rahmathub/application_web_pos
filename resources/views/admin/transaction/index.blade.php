@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('header', 'Transaction')
+@section('header', 'Produk')
 
 @section('css')
     <!-- DataTables -->
@@ -11,75 +11,51 @@
 
 @section('content')
     <div id="controller">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <a href="#" @click="addData" class="btn btn-sm btn-primary pull-right" >
-                                Create New Produk
-                            </a>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <a href="{{ url('products/create') }}"  class="btn btn-sm btn-primary pull-right">
+                                    Create New Transaction
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                
-                <div class="card-body">
-                    <table id="datatable" class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th style="width: 10px">No</th>
-                            <th class="text-center">Tanggal Transaksi</th>
-                            <th class="text-center">Total Barang</th>
-                            <th class="text-center">Total Transaksi</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-                
-                {{-- Modal Product --}}
-                <div class="modal fade" id="modal-default">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" :action="actionUrl" autocomplete="off" @submit="submitForm($event, data.id)">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Produk Anda</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    @csrf
+                    
+                    
+                    <div class="card-body">
+                        <table id="datatable" class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="width: 10px">No</th>
+                                <th class="text-center">Nama Pembeli</th>
+                                <th class="text-center">Kategori</th>
+                                <th class="text-center">Harga Modal</th>
+                                <th class="text-center">Harga Penjualan</th>
+                                <th class="text-center">Stok Barang</th>
+                                <th class="text-center">Foto</th>
+                                <th class="text-center">Deskripsi Produk</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
 
-                                    <input type="hidden" name="_method" value="PUT" v-if="editStatus">
-                                    
-                                    <div class="form-group">
-                                        <label>Nama Produk</label>
-                                        <input type="text" class="form-control" name="name_product" :value="data.name_product" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Harga Produk</label>
-                                        <input type="number" class="form-control" name="price" :value="data.price" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Stok</label>
-                                        <input type="number" class="form-control" name="qty" :value="data.qty" required>
-                                    </div>
+                    <!-- Modal show foto -->
+                    <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <img src="" alt="Product Photo" class="img-fluid" id="modalPhoto">
                                 </div>
-                                <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                        <!-- /.modal-content -->
                     </div>
-                    <!-- /.modal-dialog -->
                 </div>
             </div>
-        </div>
+        <div>
     </div>
 @endsection
 
@@ -100,47 +76,88 @@
     
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    
-    <!-- Page specific script pada datatables di atas-->
+
+    <!-- Page specific script pada datatables di atas -->
     <script type="text/javascript">
         $(function () {
             $("#datatable").DataTable();
-            });
+        });
     </script>
-
+    
     <script type="text/javascript">
-        var actionUrl = '{{ url('transactions') }}';
-        var apiUrl = '{{ url('api/transactions') }}';
-
-        var columns =  [
-            {data: 'DT_RowIndex', class: 'text-center', orderable: false},
-            {data: 'transaction_date', class: 'text-center', orderable: false},
-            {data: 'product_total', class: 'text-center', orderable: false},
-            {data: 'price_total', class: 'text-center', orderable: false},
-            {render: function(index, row, data, meta){
-                return '\
-                <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, '+meta.row+')">\
-                    Edit\
-                </a>\
-                <a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, '+data.id+')">\
-                    Delete\
-                </a>';
-            }, orderable: false, width: '200px', class: 'text-center'},
+        var actionUrl = '{{ url('products') }}';
+        var apiUrl = '{{ url('api/products') }}';
+    
+        var columns = [
+            { data: 'DT_RowIndex', className: 'text-center' },
+            { data: 'name', name: 'name', className: 'text-center' },
+            { data: 'category.name', className: 'text-center' },
+            { 
+                data: 'price_start', 
+                className: 'text-center',
+                render: function (data, type, row) {
+                    return formatCurrency(data);
+                }
+            },
+            { 
+                data: 'price_deal', 
+                className: 'text-center',
+                render: function (data, type, row) {
+                    return formatCurrency(data);
+                }
+            },
+            { data: 'stock', className: 'text-center' },
+            {
+                data: 'photo',
+                render: function (data, type, row) {
+                    return (
+                        '<a href="javascript:void(0)" onclick="controller.openPhotoModal(\'' +
+                        '{{ asset('/') }}' +
+                        data +
+                        '\')">' +
+                        '<img src="' +
+                        '{{ asset('/') }}' +
+                        data +
+                        '" alt="Product Photo" class="img-thumbnail" style="width: 150px; height: auto;">' +
+                        '</a>'
+                    );
+                },
+                orderable: false,
+                className: 'text-center',
+            },
+            { data: 'description', className: 'text-center' },
+            {
+                render: function (data, type, row, meta) {
+                    var editUrl = '{{ url('products') }}' + '/' + row.id + '/edit';
+                    return '<a href="' + editUrl + '" class="btn btn-warning btn-sm mr-1">Edit</a>' +
+                        '<a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ' + row.id + ')">Delete</a>';
+                },
+                orderable: false,
+                width: '200px',
+                className: 'text-center',
+            },
         ];
-    </script>
-
-    <script type="text/javascript">
+    
+        function formatCurrency(amount) {
+            var formatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            });
+    
+            return formatter.format(amount);
+        }
+    
         var controller = new Vue({
             el: '#controller',
             data: {
                 datas: [],
                 data: {},
-                actionUrl,
-                apiUrl,
-                editStatus: false,
-                errorMessage: '', // Menambah properti untuk menampilkan pesan kesalahan
+                actionUrl: actionUrl,
+                apiUrl: apiUrl,
+                table: null,
             },
-            mounted: function() {
+            mounted: function () {
                 this.datatable();
             },
             methods: {
@@ -150,47 +167,45 @@
                         ajax: {
                             url: _this.apiUrl,
                             type: 'GET',
+                            dataSrc: function (response) {
+                                return response.data;
+                            },
                         },
-                        columns
-                    }).on('xhr', function() {
+                        columns: columns,
+                    }).on('xhr', function () {
                         _this.datas = _this.table.ajax.json().data;
+                        _this.table.draw();
                     });
                 },
-                addData() {
-                    this.data = {};
-                    this.editStatus = false;
-                    $('#modal-default').modal();
-                },
-                editData(event, row) {
-                    this.data = this.datas[row];
-                    this.editStatus = true;
-                    $('#modal-default').modal();
+                openPhotoModal(photoUrl) {
+                    $('#modalPhoto').attr('src', photoUrl);
+                    $('#photoModal').modal('show');
                 },
                 deleteData(event, id) {
-                    if (confirm("Are you sure?")) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
                         const _this = this;
-                        $(event.target).parents('tr').remove();
+                        const rowData = this.datas.find((data) => data.id === id);
                         axios
-                            .post(this.actionUrl + '/' + id, { _method: 'DELETE' })
-                            .then(response => {
+                            .delete(_this.actionUrl + '/' + id)
+                            .then((response) => {
                                 alert('Data has been removed');
+                                _this.table
+                                    .row($(event.target).closest('tr'))
+                                    .remove()
+                                    .draw(false);
                             })
-                            .catch(error => {
+                            .catch((error) => {
                                 console.error(error);
-                                alert('An error occurred while deleting the data.');
+                                alert('An error occurred while deleting data');
                             });
                     }
                 },
-                submitForm(event, id) {
-                    event.preventDefault();
-                    const _this = this;
-                    var actionUrl = ! this.editStatus ? this.actionUrl : this.actionUrl+'/'+id;
-                    axios.post(actionUrl, new FormData($(event.target)[0])).then(response => {
-                        $('#modal-default').modal('hide');
-                        _this.table.ajax.reload();
-                    });
-                },
-            }
+            },
         });
     </script>
+    
+    
+    
+
+
 @endsection
