@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Category;
 
 use Illuminate\Http\Request;
 
@@ -12,6 +13,15 @@ class CategoryController extends Controller
     public function index()
     {
         return view('admin.category.index');
+    }
+
+
+    public function api()
+    {
+        $category = Category::all();
+        $datatables = datatables()->of($category)->addIndexColumn();
+    
+        return $datatables->make(true);
     }
 
     /**
@@ -27,7 +37,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:25'],
+            'description' => ['required', 'string', 'max:50'],
+        ]);
+        Category::create($request->all());
+
+        return response()->json(['message' => 'Category Create successfully'], 200);
+        return redirect()->route('category.index');
     }
 
     /**
@@ -49,9 +66,17 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Category $category )
     {
-        //
+        $this->validate($request,[
+            'name' => ['required', 'string', 'max:25'],
+            'description' => ['required', 'string', 'max:50'],
+        ]);
+
+        $category->update($request->all());
+
+        return response()->json(['message' => 'Category update successfully'], 200);
+        return redirect()->route('category.index');
     }
 
     /**
