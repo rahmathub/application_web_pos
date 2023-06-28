@@ -31,11 +31,6 @@ class Product extends Model
         return $validator->validate();
     }
 
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class);
-    }
-
     public function transactionDetails()
     {
         return $this->hasMany(TransactionDetail::class);

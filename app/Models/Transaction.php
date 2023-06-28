@@ -9,11 +9,6 @@ class Transaction extends Model
 {
     use HasFactory;
 
-
-    public function products() {
-        return $this->belongsTo('App\Models\Product', 'product_id');
-    }
-
     public function customers()
     {
         return $this->belongsTo(Customer::class);
