@@ -42,74 +42,16 @@
                             </thead>
                         </table>
                     </div>
-                    
-                    {{-- Modal Product --}}
-                    <div class="modal fade" id="modal-default">
-                        <div class="modal-dialog">
+
+                    <!-- Modal show foto -->
+                    <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
-                                <form method="post" :action="actionUrl" enctype="multipart/form-data" autocomplete="off" @submit="submitForm($event, data.id)">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Edit Produk</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        @csrf
-                            
-                                        <input type="hidden" name="_method" v-if="editProductId" value="PUT">
-                            
-                                        <div class="form-group">
-                                            <label>Nama Produk</label>
-                                            <input type="text" class="form-control" name="name_product" v-model="data.name" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Kategori</label>
-                                            <select class="form-control" style="width: 100%;" name="category_id" v-model="data.category_id" required>
-                                                @foreach($data_category as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Harga Modal</label>
-                                            <input type="number" class="form-control" name="price_start" v-model="data.price_start" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Harga Penjualan</label>
-                                            <input type="number" class="form-control" name="price_deal" v-model="data.price_deal" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Stok Barang</label>
-                                            <input type="number" class="form-control" name="stock" v-model="data.stock" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="photo">Foto Produk</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="file" name="photo" class="custom-file-input" id="photo" @change="handleFileChange" />
-                                                    <label class="custom-file-label">Choose file</label>
-                                                </div>
-                                            </div>
-                                            <img :src="photoUrl" alt="Product Photo" class="img-thumbnail mt-2" style="width: 150px; height: auto;" v-if="photoUrl">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Deskripsi Produk</label>
-                                            <input type="text" class="form-control" name="description" v-model="data.description" required>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer justify-content-between">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                                
+                                <div class="modal-body">
+                                    <img src="" alt="Product Photo" class="img-fluid" id="modalPhoto">
+                                </div>
                             </div>
-                            
-                            <!-- /.modal-content -->
                         </div>
-                        <!-- /.modal-dialog -->
                     </div>
                 </div>
             </div>
@@ -147,26 +89,37 @@
         var apiUrl = '{{ url('api/products') }}';
     
         var columns = [
-            {
-                data: null,
-                class: 'text-center',
-                orderable: false,
-                render: function (data, type, row, meta) {
-                    return meta.row + 1; // Menggunakan index baris sebagai nomor urut
-                },
-            },
+            { data: 'DT_RowIndex', className: 'text-center' },
             { data: 'name', name: 'name', className: 'text-center' },
             { data: 'category.name', className: 'text-center' },
-            { data: 'price_start', className: 'text-center' },
-            { data: 'price_deal', className: 'text-center' },
+            { 
+                data: 'price_start', 
+                className: 'text-center',
+                render: function (data, type, row) {
+                    return formatCurrency(data);
+                }
+            },
+            { 
+                data: 'price_deal', 
+                className: 'text-center',
+                render: function (data, type, row) {
+                    return formatCurrency(data);
+                }
+            },
             { data: 'stock', className: 'text-center' },
             {
                 data: 'photo',
                 render: function (data, type, row) {
                     return (
-                        '<img src="' +
+                        '<a href="javascript:void(0)" onclick="controller.openPhotoModal(\'' +
+                        '{{ asset('/') }}' +
                         data +
-                        '" alt="Product Photo" class="img-thumbnail" style="width: 150px; height: auto;">'
+                        '\')">' +
+                        '<img src="' +
+                        '{{ asset('/') }}' +
+                        data +
+                        '" alt="Product Photo" class="img-thumbnail" style="width: 150px; height: auto;">' +
+                        '</a>'
                     );
                 },
                 orderable: false,
@@ -175,8 +128,9 @@
             { data: 'description', className: 'text-center' },
             {
                 render: function (data, type, row, meta) {
-                    return `<a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, ${meta.row})">Edit</a>
-                    <a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ${row.id})">Delete</a>`;
+                    var editUrl = '{{ url('products') }}' + '/' + row.id + '/edit';
+                    return '<a href="' + editUrl + '" class="btn btn-warning btn-sm mr-1">Edit</a>' +
+                        '<a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ' + row.id + ')">Delete</a>';
                 },
                 orderable: false,
                 width: '200px',
@@ -184,16 +138,24 @@
             },
         ];
     
+        function formatCurrency(amount) {
+            var formatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            });
+    
+            return formatter.format(amount);
+        }
+    
         var controller = new Vue({
             el: '#controller',
             data: {
                 datas: [],
                 data: {},
-                actionUrl,
-                apiUrl,
-                editProductId: null,
-                photoUrl: null,
-                deletePhoto: false,
+                actionUrl: actionUrl,
+                apiUrl: apiUrl,
+                table: null,
             },
             mounted: function () {
                 this.datatable();
@@ -206,32 +168,21 @@
                             url: _this.apiUrl,
                             type: 'GET',
                             dataSrc: function (response) {
-                                response.data.forEach(function (data, index) {
-                                    data.DT_RowIndex = index + 1;
-                                });
                                 return response.data;
                             },
                         },
-                        columns: columns, // Menggunakan objek 'columns' yang telah didefinisikan sebelumnya
+                        columns: columns,
                     }).on('xhr', function () {
                         _this.datas = _this.table.ajax.json().data;
-                        _this.table.draw(); // Menjalankan metode draw() setelah mengubah data
+                        _this.table.draw();
                     });
                 },
-                editData(event, row) {
-                    if (row >= 0 && row < this.datas.length) {
-                        this.data = { ...this.datas[row] };
-                        this.editProductId = this.data.id;
-                        if (this.data.photo) {
-                            this.photoUrl = this.data.photo;
-                        }
-                    } else {
-                        this.resetForm();
-                    }
-                    $('#modal-default').modal();
+                openPhotoModal(photoUrl) {
+                    $('#modalPhoto').attr('src', photoUrl);
+                    $('#photoModal').modal('show');
                 },
                 deleteData(event, id) {
-                    if (confirm('Are you sure?')) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
                         const _this = this;
                         const rowData = this.datas.find((data) => data.id === id);
                         axios
@@ -249,99 +200,12 @@
                             });
                     }
                 },
-                submitForm(event, id) {
-                    event.preventDefault();
-                    const _this = this;
-                    var actionUrl = !_this.editProductId
-                        ? _this.actionUrl
-                        : _this.actionUrl + '/' + id;
-    
-                    const formData = new FormData(event.target);
-                    const photoInput = document.getElementById('photo');
-    
-                    if (_this.editProductId) {
-                        formData.append('_method', 'PUT');
-                    }
-    
-                    if (_this.deletePhoto) {
-                        formData.append('delete_photo', '1');
-                    }
-    
-                    if (photoInput && photoInput.files.length > 0) {
-                        const photoFile = photoInput.files[0];
-                        formData.append('photo', photoFile);
-                    }
-    
-                    axios
-                        .post(actionUrl, formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                            },
-                        })
-                        .then((response) => {
-                            if (_this.editProductId) {
-                                const editedDataIndex = _this.datas.findIndex(
-                                    (data) => data.id === _this.editProductId
-                                );
-                                if (editedDataIndex !== -1) {
-                                    Object.assign(_this.datas[editedDataIndex], response.data);
-                                    _this.table.row(editedDataIndex).data(response.data).draw(false);
-    
-                                    // Update photo URL
-                                    if (response.data.photo) {
-                                        _this.photoUrl = response.data.photo;
-                                    } else {
-                                        _this.photoUrl = null;
-                                    }
-                                }
-                            } else {
-                                _this.datas.push(response.data);
-                                _this.table.row.add(response.data).draw(false);
-                            }
-                            _this.resetForm();
-                            $('#modal-default').modal('hide');
-                            alert('Data has been saved');
-                            _this.reloadTableData(); // Reload data after successful update
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                            alert('An error occurred while saving data');
-                        });
-                },
-                reloadTableData() {
-                    const _this = this;
-                    _this.table.ajax.reload(null, false); // Reload data without resetting the current paging
-                },
-                handleFileChange(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        this.data.photo = file;
-                        this.photoUrl = URL.createObjectURL(file);
-                        this.deletePhoto = false;
-                    } else {
-                        if (this.deletePhoto) {
-                            this.data.photo = null;
-                            this.photoUrl = null;
-                        } else if (!this.data.photo && this.product && this.product.photo) {
-                            this.photoUrl = this.product.photo;
-                        }
-                    }
-                },
-                resetForm() {
-                    this.data = {};
-                    this.editProductId = null;
-                    this.photoUrl = null;
-                    this.deletePhoto = false;
-                    const photoInput = document.getElementById('photo');
-                    if (photoInput) {
-                        photoInput.value = '';
-                    }
-                },
             },
         });
     </script>
     
-      
+    
+    
 
 
 @endsection

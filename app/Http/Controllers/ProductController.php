@@ -89,9 +89,6 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Gagal mengupload produk. Silakan coba lagi.');
         }
     }
-    
-    
-    
 
     /**
      * Display the specified resource.
@@ -104,9 +101,13 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
-        //
+        // id saat edit use here
+        $product = Product::findOrFail($id);
+
+        $data_category = Category::all();
+        return view('admin.product.edit', compact('data_category', 'product'));
     }
 
     /**
@@ -114,36 +115,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        // Validasi input
         $this->validate($request, [
-            'name_product' => 'required',
+            'name' => 'required',
             'category_id' => 'required',
             'price_start' => 'required',
             'price_deal' => 'required',
             'stock' => 'required',
             'description' => 'required',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'image|mimes:jpeg,png,jpg|max:5000',
         ]);
     
+        // Cek apakah pengguna ingin menghapus foto yang ada
         if ($request->has('delete_photo') && $request->delete_photo == '1') {
             if ($product->photo) {
                 $imagePath = public_path($product->photo);
                 if (file_exists($imagePath)) {
-                    unlink($imagePath);
+                    unlink($imagePath); // Hapus foto yang ada
                 }
                 $product->photo = null;
             }
         }
     
-        $existingPhoto = $product->photo; // Simpan nama foto yang ada sebelumnya
+        // Simpan nama foto yang ada sebelumnya
+        $existingPhoto = $product->photo;
     
-        $product->name = $request->input('name_product');
+        // Mengisi data produk dengan input yang diberikan
+        $product->name = $request->input('name');
         $product->category_id = $request->input('category_id');
         $product->price_start = $request->input('price_start');
         $product->price_deal = $request->input('price_deal');
         $product->stock = $request->input('stock');
         $product->description = $request->input('description');
     
+        // Upload foto baru jika ada
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            // Hapus foto yang ada sebelumnya
             if ($existingPhoto) {
                 $imagePath = public_path($existingPhoto);
                 if (file_exists($imagePath)) {
@@ -151,11 +158,13 @@ class ProductController extends Controller
                 }
             }
     
+            // Upload foto baru
             $imageName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $request->file('photo')->move(public_path('images'), $imageName);
             $product->photo = 'images/' . $imageName;
         }
     
+        // Simpan perubahan pada produk
         $product->save();
     
         // Jika tidak ada file foto baru diunggah dan tidak ada perubahan pada file foto, tetapkan kembali foto yang ada sebelumnya
@@ -164,8 +173,10 @@ class ProductController extends Controller
             $product->save();
         }
     
-        return response()->json(['message' => 'Product Update successfully'], 200);
+        return view('admin.product.index');
     }
+    
+    
     
     
     /**
