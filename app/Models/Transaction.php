@@ -14,9 +14,9 @@ class Transaction extends Model
         return $this->belongsTo('App\Models\Product', 'product_id');
     }
 
-    public function costumers()
+    public function customers()
     {
-        return $this->belongsTo(Costumer::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function transactionDetails()
