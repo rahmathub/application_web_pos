@@ -142,7 +142,7 @@
     </script>
 
     <script type="text/javascript">
-                var controller = new Vue({
+            var controller = new Vue({
             el: '#controller',
             data: {
                 datas: [],
