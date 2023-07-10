@@ -39,10 +39,10 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'string', 'max:25'],
-            'email' => ['required', 'string', 'max:20'],
+            'name' => ['required', 'string', 'max:30'],
+            'email' => ['required', 'string', 'max:30'],
             'phone' => ['required', 'string', 'max:15'],
-            'address' => ['required', 'string', 'max:40'],
+            'address' => ['required', 'string', 'max:60'],
         ]);
         Customer::create($request->all());
 
@@ -73,10 +73,10 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $this->validate($request,[
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:15'],
-            'phone' => ['required', 'string', 'max:12'],
-            'address' => ['required', 'string', 'max:30'],
+            'name' => ['required', 'string', 'max:30'],
+            'email' => ['required', 'string', 'max:30'],
+            'phone' => ['required', 'string', 'max:15'],
+            'address' => ['required', 'string', 'max:60'],
         ]);
 
         $customer->update($request->all());

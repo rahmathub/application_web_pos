@@ -55,16 +55,16 @@
                                         <input type="hidden" name="_method" :value="editStatus ? 'PUT' : 'POST'">
                                         <div class="form-group">
                                             <label>Name</label>
-                                            <input type="text" class="form-control" name="name" v-model="data.name" required maxlength="25">
-                                            <small class="text-danger" v-if="data.name && data.name.length > 20">
-                                                Nama tidak boleh melebihi 20 karakter.
+                                            <input type="text" class="form-control" name="name" v-model="data.name" required maxlength="30">
+                                            <small class="text-danger" v-if="data.name && data.name.length > 28">
+                                                Nama tidak boleh melebihi 30 karakter.
                                             </small>
                                         </div>
                                         <div class="form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control" name="email" v-model="data.email" required maxlength="20">
-                                            <small class="text-danger" v-if="data.email && data.email.length > 18">
-                                                Email tidak boleh melebih 18 karakter.
+                                            <input type="text" class="form-control" name="email" v-model="data.email" required maxlength="30">
+                                            <small class="text-danger" v-if="data.email && data.email.length > 28">
+                                                Email tidak boleh melebih 30 karakter.
                                             </small>
                                         </div>
                                         <div class="form-group">
@@ -77,8 +77,8 @@
                                         <div class="form-group">
                                             <label>Address</label>
                                             <input type="text" class="form-control" name="address" v-model="data.address" required maxlength="40">
-                                            <small class="text-danger" v-if="data.address && data.address.length > 30">
-                                                Alamat tidak boleh melebihi 30 karakter.
+                                            <small class="text-danger" v-if="data.address && data.address.length > 60">
+                                                Alamat tidak boleh melebihi 58 karakter.
                                             </small>
                                         </div>
                                     </div>

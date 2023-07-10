@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
-            $table->date('transaction_date');
+            $table->datetime('transaction_datetime'); // Menggabungkan tanggal dan waktu menjadi satu kolom
             $table->integer('product_total');
             $table->integer('price_total');
             $table->integer('accept_customer_money');
@@ -23,8 +23,7 @@ return new class extends Migration
     
             $table->foreign('customer_id')->references('id')->on('customers');
         });
-    }
-    
+    }    
 
     /**
      * Reverse the migrations.
