@@ -129,7 +129,11 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        return view('admin.transaction.detail', compact('transaction'));
+        $customer = Customer::all();
+        $transactionDetail = TransactionDetail::all();
+        $product = Product::all();
+
+        return view('admin.transaction.detail', compact('transaction', 'customer', 'transactionDetail', 'product'));
     }
 
     /**
