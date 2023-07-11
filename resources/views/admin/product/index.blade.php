@@ -184,7 +184,6 @@
                 deleteData(event, id) {
                     if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
                         const _this = this;
-                        const rowData = this.datas.find((data) => data.id === id);
                         axios
                             .delete(_this.actionUrl + '/' + id)
                             .then((response) => {

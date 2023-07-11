@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('header', 'Edit Transaction')
+@section('header', 'Detail Transaction')
 
 @section('css')
     <!-- DataTables -->
@@ -10,5 +10,5 @@
 @endsection
 
 @section('content')
-    Ini adalah Edit transaction
+    Ini adalah detail transaction
 @endsection

@@ -122,14 +122,6 @@ class TransactionController extends Controller
         // Redirect atau lakukan tindakan selanjutnya
         return redirect()->route('transactions.index');
     }
-    
-    
-    
-    
-    
-    
-    
-    
     // return $request;
     
     /**
@@ -137,7 +129,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        return view('admin.transaction.detail', compact('transaction'));
     }
 
     /**
@@ -145,7 +137,7 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        return view('admin.transaction.edit');
     }
 
     /**
@@ -161,6 +153,12 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        // Hapus data pada tabel transaction_details berdasarkan transaction_id
+        $transaction->transactionDetails()->delete();
+
+        // Hapus data pada tabel transactions
+        $transaction->delete();
+
+        return response()->json(['message' => 'Data berhasil dihapus']);
     }
 }

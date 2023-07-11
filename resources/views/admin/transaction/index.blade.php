@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('header', 'Produk')
+@section('header', 'Transaction')
 
 @section('css')
     <!-- DataTables -->
@@ -77,83 +77,102 @@
 
     <!-- Page specific script -->
     <script type="text/javascript">
-        $(function () {
-            var apiUrl = '{{ url('api/transactions') }}';
-            var columns = [
-                { data: 'DT_RowIndex', className: 'text-center' },
-                { data: 'customer.name', className: 'text-center' },
-                { data: 'transaction_datetime', className: 'text-center' },
-                { data: 'product_total', className: 'text-center' },
-                { 
-                    data: 'price_total', 
-                    className: 'text-center',
-                    render: function (data, type, row) {
-                        return formatCurrency(data);
-                    }
-                },
-                { 
-                    data: 'accept_customer_money', 
-                    className: 'text-center',
-                    render: function (data, type, row) {
-                        return formatCurrency(data);
-                    }
-                },
-                { 
-                    data: 'change_customer_money', 
-                    className: 'text-center',
-                    render: function (data, type, row) {
-                        return formatCurrency(data);
-                    }
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        var editUrl = '{{ url('products') }}' + '/' + row.id + '/edit';
-                        return  '<a href="' + editUrl + '" class="btn btn-primary btn-sm mr-1">Detail</a>' +
-                                '<a href="' + editUrl + '" class="btn btn-warning btn-sm mr-1">Edit</a>' +
-                                '<a class="btn btn-danger btn-sm" onclick="deleteData(' + row.id + ')">Delete</a>';
-                    },
-                    orderable: false,
-                    width: '200px',
-                    className: 'text-center',
-                }
-            ];
+        var controller = new Vue({
+            el: '#app',
+            data: {
+                apiUrl: '{{ url('api/transactions') }}',
+                table: null,
+            },
+            methods: {
+                formatCurrency(amount) {
+                    var formatter = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0,
+                    });
 
-            var table = $('#datatable').DataTable({
-                ajax: {
-                    url: apiUrl,
-                    type: 'GET',
-                    dataSrc: function (response) {
-                        return response.data;
-                    },
+                    return formatter.format(amount);
                 },
-                columns: columns,
-            });
+                deleteData(event, id) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                        const _this = this;
+                        axios.delete('{{ url('transactions') }}/' + id)
+                            .then((response) => {
+                                alert('Data berhasil di hapus');
+                                _this.reloadData();
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                alert('Terjadi kesalahan saat menghapus data');
+                            });
+                    }
+                },
+                reloadData() {
+                    this.table.clear().draw();
+                    this.table.ajax.reload();
+                },
+            },
+            mounted() {
+                var _this = this;
 
-            function formatCurrency(amount) {
-                var formatter = new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 0,
+                var columns = [
+                    { data: 'DT_RowIndex', className: 'text-center' },
+                    { data: 'customer.name', className: 'text-center' },
+                    { data: 'transaction_datetime', className: 'text-center' },
+                    { data: 'product_total', className: 'text-center' },
+                    { 
+                        data: 'price_total', 
+                        className: 'text-center',
+                        render: function (data, type, row) {
+                            return _this.formatCurrency(data);
+                        }
+                    },
+                    { 
+                        data: 'accept_customer_money', 
+                        className: 'text-center',
+                        render: function (data, type, row) {
+                            return _this.formatCurrency(data);
+                        }
+                    },
+                    { 
+                        data: 'change_customer_money', 
+                        className: 'text-center',
+                        render: function (data, type, row) {
+                            return _this.formatCurrency(data);
+                        }
+                    },
+                    // Bagian render tombol delete
+                    {
+                        render: function(index, row, data, meta){
+                            var detailUrl = '{{ url('transactions') }}' + '/' + data.id;
+                            var editUrl = '{{ url('transactions') }}' + '/' + data.id + '/edit';
+                            return '\
+                            <a href="' + detailUrl + '" class="btn btn-primary btn-sm mr-1">Detail</a>' +
+                            '<a href="' + editUrl + '" class="btn btn-warning btn-sm mr-1">Edit</a>' +
+                            '<a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, '+data.id+')">Delete</a>';
+                        },
+                        orderable: false,
+                        width: '200px',
+                        class: 'text-center'
+                    }
+                ];
+
+                this.table = $('#datatable').DataTable({
+                    ajax: {
+                        url: this.apiUrl,
+                        type: 'GET',
+                        dataSrc: function (response) {
+                            return response.data;
+                        },
+                    },
+                    columns: columns,
+                    initComplete: function () {
+                        _this.table = this.api();
+                    }
                 });
-
-                return formatter.format(amount);
-            }
-
-            function deleteData(id) {
-                if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-                    var deleteUrl = '{{ url('products') }}' + '/' + id;
-                    axios
-                        .delete(deleteUrl)
-                        .then(function (response) {
-                            alert('Data has been removed');
-                            table.ajax.reload();
-                        })
-                        .catch(function (error) {
-                            console.error(error);
-                            alert('An error occurred while deleting data');
-                        });
-                }
             }
         });
     </script>
+
+
 @endsection
