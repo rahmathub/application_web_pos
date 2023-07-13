@@ -17,6 +17,7 @@ return new class extends Migration
             $table->datetime('transaction_datetime'); // Menggabungkan tanggal dan waktu menjadi satu kolom
             $table->integer('product_total');
             $table->integer('price_total');
+            $table->integer('netto_total');
             $table->integer('accept_customer_money');
             $table->integer('change_customer_money');
             $table->timestamps();

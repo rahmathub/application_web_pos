@@ -47,7 +47,6 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         // Validasi input
         $validator = Validator::make($request->all(), [
             'customer_id' => ['required', 'numeric'],
@@ -75,6 +74,25 @@ class TransactionController extends Controller
         $accept_customer_money = $request->input('accept_customer_money');
         $change_customer_money = $request->input('change_customer_money');
     
+        // Menghitung total produk
+        $product_total = count($product_ids);
+    
+        // Menghitung netto_total berdasarkan bahan yang diberikan
+        $netto_total = 0;
+    
+        foreach ($product_ids as $index => $product_id) {
+            if (isset($quantities[$index])) {
+                $quantity = $quantities[$index];
+    
+                // Mendapatkan harga produk dari database berdasarkan product_id
+                $product = Product::find($product_id);
+                $product_netto = $product->netto;
+    
+                // Menghitung netto_total berdasarkan netto produk dan kuantitas
+                $netto_total += $product_netto * $quantity;
+            }
+        }
+    
         // Membuat transaksi baru
         $transaction = new Transaction();
         $transaction->customer_id = $customer_id;
@@ -82,10 +100,8 @@ class TransactionController extends Controller
         $transaction->price_total = $price_total;
         $transaction->accept_customer_money = $accept_customer_money;
         $transaction->change_customer_money = $change_customer_money;
-    
-        // Menghitung total produk
-        $product_total = count($product_ids);
         $transaction->product_total = $product_total;
+        $transaction->netto_total = $netto_total;
     
         $transaction->save();
     
@@ -122,6 +138,7 @@ class TransactionController extends Controller
         // Redirect atau lakukan tindakan selanjutnya
         return redirect()->route('transactions.index');
     }
+    
     // return $request;
     
     /**
@@ -155,6 +172,7 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
+        // return $request;
         // Validasi input
         $validator = Validator::make($request->all(), [
             'customer_id' => ['required', 'numeric'],
@@ -196,35 +214,37 @@ class TransactionController extends Controller
         // Menghapus detail transaksi yang ada
         $transaction->transactionDetails()->delete();
     
-        // Menyimpan detail transaksi yang baru
+        // Menghitung netto_total berdasarkan bahan yang diberikan
+        $netto_total = 0;
+    
         foreach ($product_ids as $index => $product_id) {
             if (isset($quantities[$index])) {
                 $quantity = $quantities[$index];
     
+                // Mendapatkan harga produk dari database berdasarkan product_id
+                $product = Product::find($product_id);
+                $product_netto = $product->netto;
+    
+                // Menghitung netto_total berdasarkan netto produk dan kuantitas
+                $netto_total += $product_netto * $quantity;
+    
                 // Membuat detail transaksi baru
                 $transactionDetail = new TransactionDetail();
-                $transactionDetail->transaction_id = $transaction->id;
                 $transactionDetail->product_id = $product_id;
                 $transactionDetail->qty = $quantity;
-    
-                // Mendapatkan harga produk dari database
-                $product = Product::find($product_id);
                 $transactionDetail->price = $product->price_deal;
     
-                try {
-                    // Simpan data transaksi detail ke database
-                    $transactionDetail->save();
+                // Simpan data transaksi detail ke database
+                $transaction->transactionDetails()->save($transactionDetail);
     
-                    // Mengurangi stok produk berdasarkan jumlah yang dibeli
-                    $product->stock -= $quantity;
-                    $product->save();
-                } catch (QueryException $e) {
-                    // Menangkap error saat update data
-                    // Cetak pesan error untuk membantu mendiagnosis masalah
-                    dd($e->getMessage());
-                }
+                // Mengurangi stok produk berdasarkan jumlah yang dibeli
+                $product->stock -= $quantity;
+                $product->save();
             }
         }
+    
+        // Mengupdate netto_total pada transaksi
+        $transaction->netto_total = $netto_total;
     
         // Simpan perubahan data transaksi
         $transaction->save();
@@ -232,6 +252,7 @@ class TransactionController extends Controller
         // Redirect atau lakukan tindakan selanjutnya
         return redirect()->route('transactions.index');
     }
+    
     
 
     /**

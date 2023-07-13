@@ -44,6 +44,7 @@
                     @foreach($transaction->transactionDetails as $detail)
                         <li class="bg-info color-palette p-2 mt-2">
                             {{ $detail->product->name }} ( Jumlah Barang : {{ $detail->qty }} )
+                            <div class="mt-1" style="font-weight: bold">Keuntungan setiap barang : Rp {{ number_format($detail->product->netto, 0, ',', '.') }} x Jumlah Barang</div>
                         </li> 
                     @endforeach
                 </ul>
@@ -53,16 +54,25 @@
                     @foreach($transaction->transactionDetails as $detail)
                         <li class="bg-primary disabled color-palette p-2 mt-2">
                             ( Harga setiap Barang : Rp {{ number_format($detail->product->price_deal, 0, ',', '.') }} )
+                            <div class="mt-1" style="font-weight: bold">Harga sesuai product</div>
                         </li> 
                     @endforeach
                 </ul>
             </div>
         </div>
+        
 
         <div class="form-group row">
             <label class="col-lg-2">Total Pembayaran :</label>
             <div class="col-lg-10">
                 <input type="text" class="form-control" value="Rp {{ number_format($transaction->price_total, 0, ',', '.') }}" readonly>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-lg-2">Total Keuntungan :</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" value="Rp {{ number_format($transaction->netto_total, 0, ',', '.') }}" readonly>
             </div>
         </div>
     </div>

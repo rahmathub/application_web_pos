@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('price_start');
             $table->string('price_deal');
+            $table->string('netto');
             $table->string('photo')->nullable();
             $table->timestamps();
     

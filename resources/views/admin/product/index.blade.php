@@ -34,6 +34,7 @@
                                 <th class="text-center">Kategori</th>
                                 <th class="text-center">Harga Modal</th>
                                 <th class="text-center">Harga Penjualan</th>
+                                <th class="text-center">Keuntungan</th>
                                 <th class="text-center">Stok Barang</th>
                                 <th class="text-center">Foto</th>
                                 <th class="text-center">Deskripsi Produk</th>
@@ -101,6 +102,13 @@
             },
             { 
                 data: 'price_deal', 
+                className: 'text-center',
+                render: function (data, type, row) {
+                    return formatCurrency(data);
+                }
+            },
+            { 
+                data: 'netto', 
                 className: 'text-center',
                 render: function (data, type, row) {
                     return formatCurrency(data);

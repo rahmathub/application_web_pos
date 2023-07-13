@@ -51,12 +51,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         // Validasi input
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'category_id' => 'required',
             'price_start' => 'required',
             'price_deal' => 'required',
+            'netto' => 'required',
             'stock' => 'required',
             'photo' => 'required|image|mimes:jpeg,png,jpg|max:5000', // Hanya menerima file gambar dengan ukuran maksimal 5MB
             'description' => 'required',
@@ -121,6 +123,7 @@ class ProductController extends Controller
             'category_id' => 'required',
             'price_start' => 'required',
             'price_deal' => 'required',
+            'netto' => 'required',
             'stock' => 'required',
             'description' => 'required',
             'photo' => 'image|mimes:jpeg,png,jpg|max:5000',
@@ -145,6 +148,7 @@ class ProductController extends Controller
         $product->category_id = $request->input('category_id');
         $product->price_start = $request->input('price_start');
         $product->price_deal = $request->input('price_deal');
+        $product->netto = $request->input('netto');
         $product->stock = $request->input('stock');
         $product->description = $request->input('description');
     

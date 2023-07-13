@@ -85,23 +85,21 @@
                 
                 {{-- Atur kuantitas produk --}}
                 <div id="quantityInputs" style="display: none;">
-                    @foreach($selectedProductIds as $productId)
-                        <div class="form-group row quantity-input" id="quantityInput{{ $productId }}">
-                            <div class="form-group row">
+                    @foreach($products as $product)
+                        <div class="form-group row quantity-input" id="quantityInput{{ $product->id }}" style="display: {{ in_array($product->id, $selectedProductIds) ? 'block' : 'none' }};">
+                            <div class="from-group row">
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
-                                    <label>Atur Kuantitas {{ $products->where('id', $productId)->first()->name }} (Rp {{ number_format($products->where('id', $productId)->first()->price_deal, 0, ',', '.') }}) :</label>
+                                    <label>Atur Kuantitas {{ $product->name }} (Rp {{ number_format($product->price_deal, 0, ',', '.') }}) :</label>
                                 </div>
                                 <div class="col-lg-3">
-                                    <input type="number" class="form-control" name="quantity[]" value="{{ $transaction->transactionDetails->where('product_id', $productId)->first()->qty ?? '' }}" onchange="updateTotalPayment()">
+                                    <input type="number" class="form-control" name="quantity[]" value="{{ $transaction->transactionDetails->where('product_id', $product->id)->first()->qty ?? '' }}" onchange="updateTotalPayment()">
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
                 
-
-
         
                 <div class="form-group row">
                     <div class="col-lg-3">
@@ -169,99 +167,99 @@
     <!-- dropzonejs -->
     <script src="{{ asset('assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
 
-<script>
-        $(function ()   {
+    <script>
+            $(function ()   {
 
-        $(document).ready(function() {
-            $('.select2').select2();
+            $(document).ready(function() {
+                $('.select2').select2();
+            });
+
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+            
+        })
+
+        // fitur kuantitas ditampilkan saat edit data
+        window.addEventListener('DOMContentLoaded', (event) => {
+            showQuantityInputs(document.querySelector('select[name="product_id[]"]'));
         });
 
-        //Date and time picker
-        $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+        // fitur kuantitas ditampilkan setiap produk dipilih
+        function showQuantityInputs(selectElement) {
+            var selectedOptions = selectElement.selectedOptions;
+            var quantityInputsContainer = document.getElementById('quantityInputs');
+
+            // Setel ulang tampilan dan status nonaktif dari semua baris input kuantitas
+            var quantityInputs = document.getElementsByClassName('quantity-input');
+            for (var i = 0; i < quantityInputs.length; i++) {
+                quantityInputs[i].style.display = 'none';
+                var quantityInput = quantityInputs[i].querySelector('input[name^="quantity"]');
+                quantityInput.disabled = true;
+            }
+
+            // Tampilkan baris input kuantitas untuk setiap produk yang dipilih dan aktifkan input
+            for (var i = 0; i < selectedOptions.length; i++) {
+                var productId = selectedOptions[i].value;
+                var quantityInputRow = document.getElementById('quantityInput' + productId);
+                if (quantityInputRow) {
+                    quantityInputRow.style.display = 'block';
+                    var quantityInput = quantityInputRow.querySelector('input[name^="quantity"]');
+                    quantityInput.disabled = false;
+                }
+            }
+
+            // Tampilkan atau sembunyikan wadah input kuantitas berdasarkan jumlah opsi yang dipilih
+            if (selectedOptions.length > 0) {
+                quantityInputsContainer.style.display = 'block';
+            } else {
+                quantityInputsContainer.style.display = 'none';
+            }
+        }
+
         
-    })
+        // tampilan total pembayaran setelah menekan input salah satu produk atau beberapa produk
+        function updateTotalPayment() {
+            var selectedProducts = document.querySelectorAll('select[name="product_id[]"] option:checked');
+            var totalPayment = 0;
 
-    // fitur kuantitas ditampilkan saat edit data
-    window.addEventListener('DOMContentLoaded', (event) => {
-        showQuantityInputs(document.querySelector('select[name="product_id[]"]'));
-    });
+            selectedProducts.forEach(function(product) {
+                var productId = product.value - 1; // Kurangi 1 dari nilai product ID untuk mendapatkan indeks
+                var quantityInput = document.querySelectorAll('input[name="quantity[]"]')[productId];
+                var price = parseFloat(product.getAttribute('data-price'));
+                var quantity = parseInt(quantityInput.value);
 
-    // fitur kuantitas ditampilkan setiap produk dipilih
-    function showQuantityInputs(selectElement) {
-        var selectedOptions = selectElement.selectedOptions;
-        var quantityInputsContainer = document.getElementById('quantityInputs');
+                if (!isNaN(quantity)) {
+                    totalPayment += price * quantity;
+                }
+            });
 
-        // Setel ulang tampilan dan status nonaktif dari semua baris input kuantitas
-        var quantityInputs = document.getElementsByClassName('quantity-input');
-        for (var i = 0; i < quantityInputs.length; i++) {
-            quantityInputs[i].style.display = 'none';
-            var quantityInput = quantityInputs[i].querySelector('input[name^="quantity"]');
-            quantityInput.disabled = true;
+            document.getElementById('totalPayment').value = totalPayment;
         }
 
-        // Tampilkan baris input kuantitas untuk setiap produk yang dipilih dan aktifkan input
-        for (var i = 0; i < selectedOptions.length; i++) {
-            var productId = selectedOptions[i].value;
-            var quantityInputRow = document.getElementById('quantityInput' + productId);
-            if (quantityInputRow) {
-                quantityInputRow.style.display = 'block';
-                var quantityInput = quantityInputRow.querySelector('input[name^="quantity"]');
-                quantityInput.disabled = false;
-            }
-        }
 
-        // Tampilkan atau sembunyikan wadah input kuantitas berdasarkan jumlah opsi yang dipilih
-        if (selectedOptions.length > 0) {
-            quantityInputsContainer.style.display = 'block';
-        } else {
-            quantityInputsContainer.style.display = 'none';
-        }
-    }
+        // fitur uang kembalian di input
+        // Ambil elemen-elemen input yang diperlukan
+        var receivedMoneyInput = document.getElementById('receivedMoney');
+        var changeMoneyInput = document.getElementById('changeMoney');
+        var changeMoneyHiddenInput = document.getElementById('changeMoneyHidden');
+        var totalPaymentInput = document.getElementById('totalPayment');
 
-    
-    // tampilan total pembayaran setelah menekan input salah satu produk atau beberapa produk
-    function updateTotalPayment() {
-        var selectedProducts = document.querySelectorAll('select[name="product_id[]"] option:checked');
-        var totalPayment = 0;
+        // Tambahkan event listener untuk perubahan pada input 'Uang Diterima'
+        receivedMoneyInput.addEventListener('input', function() {
+            var totalPayment = parseFloat(totalPaymentInput.value.replace(/\D/g, ''));
+            var receivedMoney = parseFloat(this.value.replace(/\D/g, ''));
 
-        selectedProducts.forEach(function(product) {
-            var productId = product.value - 1; // Kurangi 1 dari nilai product ID untuk mendapatkan indeks
-            var quantityInput = document.querySelectorAll('input[name="quantity[]"]')[productId];
-            var price = parseFloat(product.getAttribute('data-price'));
-            var quantity = parseInt(quantityInput.value);
+            // Hitung uang kembalian dan tampilkan dengan format Rupiah
+            var changeMoney = receivedMoney - totalPayment;
+            var formattedChangeMoney = changeMoney.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
 
-            if (!isNaN(quantity)) {
-                totalPayment += price * quantity;
-            }
+            // Perbarui nilai input 'Uang Kembalian'
+            changeMoneyInput.value = formattedChangeMoney;
+
+            // Ubah nilai input tersembunyi 'change_customer_money_hidden' menjadi angka tanpa format Rupiah
+            var changeMoneyWithoutCurrency = changeMoney.toString().replace(/\D/g, '');
+            changeMoneyHiddenInput.value = changeMoneyWithoutCurrency;
         });
-
-        document.getElementById('totalPayment').value = totalPayment;
-    }
-
-
-    // fitur uang kembalian di input
-    // Ambil elemen-elemen input yang diperlukan
-    var receivedMoneyInput = document.getElementById('receivedMoney');
-    var changeMoneyInput = document.getElementById('changeMoney');
-    var changeMoneyHiddenInput = document.getElementById('changeMoneyHidden');
-    var totalPaymentInput = document.getElementById('totalPayment');
-
-    // Tambahkan event listener untuk perubahan pada input 'Uang Diterima'
-    receivedMoneyInput.addEventListener('input', function() {
-        var totalPayment = parseFloat(totalPaymentInput.value.replace(/\D/g, ''));
-        var receivedMoney = parseFloat(this.value.replace(/\D/g, ''));
-
-        // Hitung uang kembalian dan tampilkan dengan format Rupiah
-        var changeMoney = receivedMoney - totalPayment;
-        var formattedChangeMoney = changeMoney.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
-
-        // Perbarui nilai input 'Uang Kembalian'
-        changeMoneyInput.value = formattedChangeMoney;
-
-        // Ubah nilai input tersembunyi 'change_customer_money_hidden' menjadi angka tanpa format Rupiah
-        var changeMoneyWithoutCurrency = changeMoney.toString().replace(/\D/g, '');
-        changeMoneyHiddenInput.value = changeMoneyWithoutCurrency;
-    });
-</script>
+    </script>
 
 @endsection

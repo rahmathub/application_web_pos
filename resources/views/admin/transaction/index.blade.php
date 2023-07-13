@@ -32,8 +32,9 @@
                                     <th style="width: 10px">No</th>
                                     <th class="text-center">Nama Pembeli</th>
                                     <th class="text-center">Tanggal Pembelian</th>
-                                    <th class="text-center">Total Produk</th>
+                                    <th class="text-center">Total Jenis Produk</th>
                                     <th class="text-center">Total Pembayaran</th>
+                                    <th class="text-center">Total Keuntungan</th>
                                     <th class="text-center">Uang Diterima</th>
                                     <th class="text-center">Uang Kembalian</th>
                                     <th class="text-center">Action</th>
@@ -122,6 +123,13 @@
                     { data: 'product_total', className: 'text-center' },
                     { 
                         data: 'price_total', 
+                        className: 'text-center',
+                        render: function (data, type, row) {
+                            return _this.formatCurrency(data);
+                        }
+                    },
+                    { 
+                        data: 'netto_total', 
                         className: 'text-center',
                         render: function (data, type, row) {
                             return _this.formatCurrency(data);

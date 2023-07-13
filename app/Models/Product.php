@@ -14,7 +14,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'price_start', 'price_deal', 'stock', 'photo', 'description'];
+    protected $fillable = ['name', 'category_id', 'price_start', 'price_deal', 'netto', 'stock', 'photo', 'description'];
 
     public static function validateData(array $data)
     {
@@ -23,6 +23,7 @@ class Product extends Model
             'category_id' => 'required',
             'price_start' => 'required',
             'price_deal' => 'required',
+            'netto' => 'required',
             'stock' => 'required',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5000',
             'description' => 'required',

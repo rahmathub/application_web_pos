@@ -14,6 +14,7 @@ class Transaction extends Model
         'transaction_datetime',
         'product_total',
         'price_total',
+        'netto_total',
         'accept_customer_money',
         'change_customer_money',
     ];

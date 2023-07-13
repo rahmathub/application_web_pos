@@ -78,6 +78,13 @@
                         <input type="number" class="form-control" id="price_deal" name="price_deal" value="{{ $product->price_deal }}" required>
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label for="price_deal" class="col-lg-2 col-form-label">Keuntungan</label>
+                    <div class="col-lg-10">
+                        <input type="number" class="form-control" id="netto" name="netto" value="{{ $product->netto }}" readonly required>
+                    </div>
+                </div>
         
                 <div class="form-group row">
                     <label for="stock" class="col-lg-2 col-form-label">Stok Barang</label>
@@ -174,5 +181,31 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        // Ambil elemen input harga modal, harga penjualan, dan netto
+        var priceStartInput = document.getElementById('price_start');
+        var priceDealInput = document.getElementById('price_deal');
+        var nettoInput = document.getElementById('netto');
+
+        // Tambahkan event listener pada input harga modal dan harga penjualan
+        priceStartInput.addEventListener('input', updateNetto);
+        priceDealInput.addEventListener('input', updateNetto);
+
+        // Fungsi untuk memperbarui nilai input keuntungan
+        function updateNetto() {
+            var priceStart = parseFloat(priceStartInput.value);
+            var priceDeal = parseFloat(priceDealInput.value);
+            
+            var netto = priceDeal - priceStart;
+
+            // // Pastikan nilai keuntungan tetap positif
+            // if (netto < 0) {
+            //     netto = 0;
+            // }
+
+            // Update nilai input keuntungan
+            nettoInput.value = netto;
+        }
+
     </script>
 @endsection

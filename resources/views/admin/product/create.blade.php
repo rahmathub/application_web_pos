@@ -68,20 +68,29 @@
                 </div>
 
                 <div class="form-group row">
-                    <div class="col lg-2">
+                    <div class="col-lg-2">
                         <label>Harga Modal</label>
                     </div>
                     <div class="col-lg-10">
-                        <input type="number" class="form-control" name="price_start" required>
+                        <input type="number" class="form-control" name="price_start" id="priceStart" required>
                     </div>
                 </div>
-
+                
                 <div class="form-group row">
-                    <div class="col lg-2">
+                    <div class="col-lg-2">
                         <label>Harga Penjualan</label>
                     </div>
                     <div class="col-lg-10">
-                        <input type="number" class="form-control" name="price_deal" required>
+                        <input type="number" class="form-control" name="price_deal" id="priceDeal" required>
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <div class="col-lg-2">
+                        <label>Keuntungan Bersih</label>
+                    </div>
+                    <div class="col-lg-10">
+                        <input type="number" class="form-control" name="netto" id="netto" readonly>
                     </div>
                 </div>
                 
@@ -187,5 +196,26 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-        </script>
+
+        // Ambil referensi ke elemen input harga modal dan harga penjualan
+        var priceStartInput = document.getElementById('priceStart');
+        var priceDealInput = document.getElementById('priceDeal');
+
+        // Tambahkan event listener untuk menghitung keuntungan bersih
+        priceStartInput.addEventListener('input', calculateNetto);
+        priceDealInput.addEventListener('input', calculateNetto);
+
+        // Fungsi untuk menghitung keuntungan bersih
+        function calculateNetto() {
+            var priceStart = parseFloat(priceStartInput.value) || 0;
+            var priceDeal = parseFloat(priceDealInput.value) || 0;
+            var nettoInput = document.getElementById('netto');
+
+            // Hitung keuntungan bersih
+            var netto = priceDeal - priceStart;
+
+            // Update nilai input keuntungan bersih
+            nettoInput.value = netto;
+        }
+    </script>
 @endsection
