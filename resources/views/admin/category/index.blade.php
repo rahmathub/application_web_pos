@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('header', 'Costumer')
+@section('header', 'Category')
 
 @section('css')
     <!-- DataTables -->

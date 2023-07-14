@@ -1,3 +1,16 @@
+<?php
+    use Carbon\Carbon;
+
+    $currentYear = Carbon::now()->year;
+    $startYear = 2014;
+
+    if ($currentYear > $startYear) {
+        $yearRange = $startYear . '-' . $currentYear;
+    } else {
+        $yearRange = $startYear;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -261,7 +274,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+    <strong>Copyright &copy; <?= $yearRange ?> Rahmat Wijayanto Code</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 3.1.0

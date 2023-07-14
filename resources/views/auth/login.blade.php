@@ -5,10 +5,10 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-            <a href="#" class="h1"><b>Admin</b>LTE</a>
+            <a href="#" class="h2"><b>Admin Web Pos</b></a>
             </div>
             <div class="card-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">Login for your start manage bussiness</p>
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf 
@@ -61,11 +61,11 @@
                 </div>
             </form>
 
-            <p class="mb-1">
+            {{-- <p class="mb-1">
                 <a href="forgot-password.html">I forgot my password</a>
-            </p>
+            </p> --}}
             <p class="mb-0">
-                <a href="register.html" class="text-center">Register a new membership</a>
+                <a href="{{ url('register') }}" class="text-center">Register a new membership</a>
             </p>
             </div>
             <!-- /.card-body -->

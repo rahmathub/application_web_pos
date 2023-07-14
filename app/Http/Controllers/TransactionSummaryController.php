@@ -82,8 +82,8 @@ class TransactionSummaryController extends Controller
             'total_transactions',
             'totalProfit_today',
             'totalProfit_yesterday',
-            'totalProfit_lastYear',
             'totalProfit_month',
+            'totalProfit_lastYear',
             'data_donut',
             'label_donut',
             'data_bar'
