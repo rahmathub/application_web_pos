@@ -42,7 +42,6 @@ Route::resource('transaction_summaries', TransactionSummaryController::class);
 // API
 Route::get('/api/products', [App\Http\Controllers\ProductController::class, 'api']);
 Route::get('/api/transactions', [App\Http\Controllers\TransactionController::class, 'api']);
-Route::get('/api/transaction_summaries', [App\Http\Controllers\TransactionSummaryController::class, 'api']);
 Route::get('/api/customers', [App\Http\Controllers\CustomerController::class, 'api']);
 Route::get('/api/categories', [App\Http\Controllers\CategoryController::class, 'api']);
 

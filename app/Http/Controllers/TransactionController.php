@@ -172,7 +172,6 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        // return $request;
         // Validasi input
         $validator = Validator::make($request->all(), [
             'customer_id' => ['required', 'numeric'],
@@ -211,36 +210,53 @@ class TransactionController extends Controller
         $product_total = count($product_ids);
         $transaction->product_total = $product_total;
     
-        // Menghapus detail transaksi yang ada
-        $transaction->transactionDetails()->delete();
-    
         // Menghitung netto_total berdasarkan bahan yang diberikan
         $netto_total = 0;
     
+        // Loop untuk mengupdate stok produk berdasarkan perubahan kuantitas
         foreach ($product_ids as $index => $product_id) {
             if (isset($quantities[$index])) {
                 $quantity = $quantities[$index];
-    
+
                 // Mendapatkan harga produk dari database berdasarkan product_id
                 $product = Product::find($product_id);
                 $product_netto = $product->netto;
-    
+
                 // Menghitung netto_total berdasarkan netto produk dan kuantitas
                 $netto_total += $product_netto * $quantity;
+
+                // Membuat detail transaksi baru atau mengupdate jika sudah ada
+                $transactionDetail = $transaction->transactionDetails()->updateOrCreate(
+                    ['product_id' => $product_id],
+                    ['qty' => $quantity, 'price' => $product->price_deal]
+                );
+
+                // Mengurangi stok produk jika ada perubahan kuantitas
+                if ($transactionDetail->wasRecentlyCreated || $transactionDetail->qty != $quantity) {
+                    // Mengembalikan stok sebelumnya jika ada perubahan kuantitas
+                    if (!$transactionDetail->wasRecentlyCreated) {
+                        $product->stock += $transactionDetail->qty;
+                    }
+
+                    // Mengurangi stok berdasarkan kuantitas baru
+                    $product->stock -= $quantity;
+                    $product->save();
+                }
+            }
+        }
+
     
-                // Membuat detail transaksi baru
-                $transactionDetail = new TransactionDetail();
-                $transactionDetail->product_id = $product_id;
-                $transactionDetail->qty = $quantity;
-                $transactionDetail->price = $product->price_deal;
-    
-                // Simpan data transaksi detail ke database
-                $transaction->transactionDetails()->save($transactionDetail);
-    
-                // Mengurangi stok produk berdasarkan jumlah yang dibeli
-                $product->stock -= $quantity;
+        // Menghapus detail transaksi yang tidak ada dalam perubahan kuantitas
+        $existingProductIds = $transaction->transactionDetails()->pluck('product_id')->toArray();
+        $productIdsToDelete = array_diff($existingProductIds, $product_ids);
+        if (!empty($productIdsToDelete)) {
+            foreach ($productIdsToDelete as $productId) {
+                $transactionDetail = $transaction->transactionDetails()->where('product_id', $productId)->first();
+                $product = Product::find($productId);
+                $product->stock += $transactionDetail->qty; // Menambahkan stok yang dihapus
                 $product->save();
             }
+            $transaction->transactionDetails()->whereIn('product_id', $productIdsToDelete)->delete();
         }
     
         // Mengupdate netto_total pada transaksi
@@ -252,8 +268,6 @@ class TransactionController extends Controller
         // Redirect atau lakukan tindakan selanjutnya
         return redirect()->route('transactions.index');
     }
-    
-    
 
     /**
      * Remove the specified resource from storage.
