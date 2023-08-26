@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('header', 'Rekap Transaksi')
+@section('header')
 
 @section('content')
     <div class="container-fluid">
@@ -37,7 +37,7 @@
                 <div class="small-box bg-secondary" style="color: #343a40">
                     <div class="inner">
                         <h3>{{ $total_customers }}</h3>
-                        <p>Data total Customers yang sudah transaksi</p>
+                        <p> Customers yang sudah transaksi</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>

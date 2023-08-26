@@ -12,7 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('admin.category.index');
+        $rahmat = 'template engine';
+        return view('admin.category.index', compact('rahmat'));
     }
 
 

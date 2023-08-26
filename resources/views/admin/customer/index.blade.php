@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <a href="#" @click="addData()" class="btn btn-sm btn-primary pull-right">
-                                    Buat Costumer Baru
+                                    Create Customer
                                 </a>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                             <div class="modal-content">
                                 <form method="post" :action="actionUrl" autocomplete="off" @submit="submitForm($event, data.id)">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Publishers</h4>
+                                        <h4 class="modal-title">Create Customer</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
