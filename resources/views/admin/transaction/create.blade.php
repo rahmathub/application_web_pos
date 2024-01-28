@@ -85,10 +85,10 @@
                             <div class="form-group row">
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
-                                    <label>Atur Kuantitas {{ $product->name }} (Rp {{ number_format($product->price_deal, 0, ',', '.') }}) :</label>
+                                    <label>Atur Kuantitas {{ $product->name }} (Rp {{ number_format($product->price_deal, 0, ',', '.') }}) : Sisa Stok : {{ $product->stock }}</label>
                                 </div>
                                 <div class="col-lg-3">
-                                    <input type="number" class="form-control" name="quantity[]" onchange="updateTotalPayment()">
+                                    <input type="number" class="form-control" name="quantity[]" onchange="updateTotalPayment()" min="0">
                                 </div>
                             </div>
                         </div>
