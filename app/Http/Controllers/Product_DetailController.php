@@ -12,7 +12,7 @@ class Product_DetailController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.product_detail.index');
     }
 
     /**

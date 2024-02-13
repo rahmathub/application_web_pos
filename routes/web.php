@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionSummaryController;
+use App\Http\Controllers\Product_DetailController;
+use App\Http\Controllers\Note_buyerController;
+use App\Http\Controllers\StoreController;
 
 
 /*
@@ -38,9 +41,9 @@ Route::resource('categories', CategoryController::class);
 Route::resource('customers', CustomerController::class);
 Route::resource('transactions', TransactionController::class);
 Route::resource('transaction_summaries', TransactionSummaryController::class);
-Route::resource('Product_Detail', TransactionController::class);
-Route::resource('Store', TransactionController::class);
-Route::resource('Note_buyer', TransactionController::class);
+Route::resource('Product_Detail', Product_DetailController::class);
+Route::resource('Store', StoreController::class);
+Route::resource('Note_buyer', Note_buyerController::class);
 
 // API
 Route::get('/api/products', [App\Http\Controllers\ProductController::class, 'api']);
