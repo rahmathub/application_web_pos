@@ -38,6 +38,9 @@ Route::resource('categories', CategoryController::class);
 Route::resource('customers', CustomerController::class);
 Route::resource('transactions', TransactionController::class);
 Route::resource('transaction_summaries', TransactionSummaryController::class);
+Route::resource('Product_Detail', TransactionController::class);
+Route::resource('Store', TransactionController::class);
+Route::resource('Note_buyer', TransactionController::class);
 
 // API
 Route::get('/api/products', [App\Http\Controllers\ProductController::class, 'api']);
