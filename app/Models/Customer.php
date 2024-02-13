@@ -17,4 +17,10 @@ class Customer extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    // relasi antara customer dan product detail
+    public function productDetails()
+    {
+        return $this->hasMany(Product_Detail::class);
+    }
 }
