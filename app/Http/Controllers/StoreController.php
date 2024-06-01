@@ -19,6 +19,15 @@ class StoreController extends Controller
         return view('admin.supplier.index');
     }
 
+    // untuk table supaya muncul
+    public function api()
+    {
+        $store = Store::all();
+        $datatables = datatables()->of($store)->addIndexColumn();
+    
+        return $datatables->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
