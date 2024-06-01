@@ -42,8 +42,8 @@ Route::resource('customers', CustomerController::class);
 Route::resource('transactions', TransactionController::class);
 Route::resource('transaction_summaries', TransactionSummaryController::class);
 Route::resource('Product_Detail', Product_DetailController::class);
-Route::resource('Store', StoreController::class);
-Route::resource('Note_buyer', Note_buyerController::class);
+Route::resource('store', StoreController::class);
+Route::resource('note_buyer', Note_buyerController::class);
 
 // API
 Route::get('/api/products', [App\Http\Controllers\ProductController::class, 'api']);

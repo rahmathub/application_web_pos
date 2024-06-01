@@ -233,6 +233,16 @@
             </a>
           </li>
 
+          {{-- kerja sama toko --}}
+          <li class="nav-item">
+            <a href="{{ url('store') }}" class="nav-link {{ request()->is('store') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-clipboard"></i>
+              <p>
+                Supplier
+              </p>
+            </a>
+          </li>
+
           {{-- Rekap Transaksi --}}
           <li class="nav-item">
             <a href="{{ url('transaction_summaries') }}" class="nav-link {{ request()->is('transaction_summaries') ? 'active' : '' }}">
