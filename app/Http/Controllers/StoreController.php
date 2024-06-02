@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Store;
+use App\Models\Product;
+use App\Models\Note_buyer;
 use Illuminate\Http\Request;
 
 class StoreController extends Controller
@@ -58,7 +60,11 @@ class StoreController extends Controller
      */
     public function show(Store $store)
     {
-        //
+        $store = Store::all();
+        $storedetail = Note_buyer::all();
+        $product = Product::all();
+
+        return view('admin.supplier.detail', compact('store', 'storedetail', 'product'));
     }
 
     /**

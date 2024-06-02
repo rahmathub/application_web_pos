@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('note_buyers', function (Blueprint $table) {
+        Schema::create('note_buyer_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('store_id');
-            $table->string('photo');
             $table->timestamps();
-
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('store_id')->references('id')->on('stores');
         });
     }
 
@@ -28,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('note_buyers');
+        Schema::dropIfExists('note_buyer_details');
     }
 };
