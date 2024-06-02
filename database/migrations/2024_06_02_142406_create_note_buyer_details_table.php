@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('note_buyer_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('note_buyer_id');
+            $table->unsignedBigInteger('product_id');
             $table->timestamps();
+
+            $table->foreign('note_buyer_id')->references('id')->on('note_buyers');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
