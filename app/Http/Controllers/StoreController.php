@@ -41,7 +41,16 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name_store' => ['required', 'string', 'max:50'],
+            'number_phone' => ['required', 'string', 'max:12'],
+            'address_store' => ['required', 'string', 'max:80'],
+            'description' => ['required', 'string', 'max:100'],
+        ]);
+        Store::create($request->all());
+
+        return response()->json(['message' => 'Customer Create successfully'], 200);
+        return redirect()->route('supplier.index');
     }
 
     /**
@@ -66,6 +75,17 @@ class StoreController extends Controller
     public function update(Request $request, Store $store)
     {
         //
+        $this->validate($request,[
+            'name_store' => ['required', 'string', 'max:50'],
+            'number_phone' => ['required', 'string', 'max:12'],
+            'address_store' => ['required', 'string', 'max:80'],
+            'description' => ['required', 'string', 'max:100'],
+        ]);
+
+        $store->update($request->all());
+
+        return response()->json(['message' => 'Store update successfully'], 200);
+        return redirect()->route('supplier.index');
     }
 
     /**
@@ -74,5 +94,6 @@ class StoreController extends Controller
     public function destroy(Store $store)
     {
         //
+        $store->delete();
     }
 }

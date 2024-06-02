@@ -55,30 +55,30 @@
                                         <input type="hidden" name="_method" :value="editStatus ? 'PUT' : 'POST'">
                                         <div class="form-group">
                                             <label>Name Supplier</label>
-                                            <input type="text" class="form-control" name="name" v-model="data.name" required maxlength="30">
-                                            <small class="text-danger" v-if="data.name && data.name.length > 28">
-                                                Nama tidak boleh melebihi 30 karakter.
+                                            <input type="text" class="form-control" name="name_store" v-model="data.name_store" required maxlength="30">
+                                            <small class="text-danger" v-if="data.name_store && data.name_store.length > 50">
+                                                Nama tidak boleh melebihi 50 karakter.
                                             </small>
                                         </div>
                                         <div class="form-group">
                                             <label>Nomor Hp</label>
-                                            <input type="number" class="form-control" name="phone" v-model="data.phone" required maxlength="15">
-                                            <small class="text-danger" v-if="data.phone && data.phone.toString().length > 12">
+                                            <input type="number" class="form-control" name="number_phone" v-model="data.number_phone" required maxlength="15">
+                                            <small class="text-danger" v-if="data.number_phone && data.number_phone.toString().length > 12">
                                                 Nomor hape tidak boleh melebihi 12 karakter.
                                             </small>
                                         </div>
                                         <div class="form-group">
                                             <label>Address</label>
-                                            <input type="text" class="form-control" name="address" v-model="data.address" required maxlength="40">
-                                            <small class="text-danger" v-if="data.address && data.address.length > 60">
-                                                Alamat tidak boleh melebihi 58 karakter.
+                                            <input type="text" class="form-control" name="address_store" v-model="data.address_store" required maxlength="40">
+                                            <small class="text-danger" v-if="data.address_store && data.address_store.length > 80">
+                                                Alamat tidak boleh melebihi 80 karakter.
                                             </small>
                                         </div>
                                         <div class="form-group">
                                             <label>Keterangan Toko Supplier</label>
-                                            <input type="text" class="form-control" name="email" v-model="data.email" required maxlength="30">
-                                            <small class="text-danger" v-if="data.email && data.email.length > 28">
-                                                Email tidak boleh melebih 30 karakter.
+                                            <input type="text" class="form-control" name="description" v-model="data.description" required maxlength="30">
+                                            <small class="text-danger" v-if="data.description && data.description.length > 100">
+                                                Email tidak boleh melebih 100 karakter.
                                             </small>
                                         </div>
                                     </div>
@@ -130,7 +130,12 @@
             {data: 'address_store', class: 'text-center', orderable: false},
             {data: 'description', class: 'text-center', orderable: false},
             {render: function(index, row, data, meta){
+                var detailUrl = '{{ url('store') }}' + '/' + data.id;
                 return '\
+                <a href="' + detailUrl + '" class="btn btn-primary btn-sm">\
+                    Detail\
+                </a>\
+                \
                 <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, '+meta.row+')">\
                     Edit\
                 </a>\
