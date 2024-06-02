@@ -16,9 +16,10 @@ class Note_buyer extends Model
         return $this->belongsTo(Store::class);
     }
 
-    // relasi note buyer dan product
-    public function products()
+    // relasi note buyer dan note buyerdetails
+    public function notebuyerDetails()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(Note_buyer_detail::class);
     }
+
 }

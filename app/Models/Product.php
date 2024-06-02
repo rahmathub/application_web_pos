@@ -42,10 +42,10 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // relasi product dan notebuyer
-    public function noteBuyers()
+    // relasi product dan notebuyerDetail
+    public function notebuyerDetails()
     {
-        return $this->hasMany(Note_buyer::class);
+        return $this->hasMany(Note_buyer_detail::class);
     }
 
     // relasi antara product dan product detail
