@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note_buyer;
+use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Http\Request;
 
 class Note_buyerController extends Controller
@@ -20,7 +22,10 @@ class Note_buyerController extends Controller
      */
     public function create()
     {
-        //
+        $notebuyer = Note_buyer::all();
+        $store = Store::all();
+        $products = Product::all();
+        return view ('admin.supplier.create', compact('notebuyer', 'store', 'products'));
     }
 
     /**

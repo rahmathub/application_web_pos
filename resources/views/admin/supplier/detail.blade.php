@@ -17,8 +17,8 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-md-10">
-                                <a href="{{ url('products/create') }}"  class="btn btn-sm btn-primary pull-right">
-                                    Create New Transaction
+                                <a href="{{ url('note_buyer/create') }}"  class="btn btn-sm btn-primary pull-right">
+                                    Create New Detail Note
                                 </a>
                             </div>
                         </div>
@@ -30,14 +30,9 @@
                             <thead>
                             <tr>
                                 <th style="width: 10px">No</th>
-                                <th class="text-center">Foto</th>
-                                <th class="text-center">Kategori</th>
-                                <th class="text-center">Harga Modal</th>
-                                <th class="text-center">Harga Penjualan</th>
-                                <th class="text-center">Keuntungan</th>
-                                <th class="text-center">Stok Barang</th>
                                 <th class="text-center">Foto Nota</th>
                                 <th class="text-center">Tanggal Pembelian</th>
+                                <th class="text-center">Total Pembelian</th>
                                 <th class="text-center">Action</th>
                             </tr>
                             </thead>
@@ -86,20 +81,11 @@
     </script>
     
     <script type="text/javascript">
-        var actionUrl = '{{ url('products') }}';
-        var apiUrl = '{{ url('api/products') }}';
+        var actionUrl = '{{ url('note_buyer') }}';
+        var apiUrl = '{{ url('api/note_buyer') }}';
     
         var columns = [
             { data: 'DT_RowIndex', className: 'text-center' },
-            { data: 'name', name: 'name', className: 'text-center' },
-            { data: 'category.name', className: 'text-center' },
-            { 
-                data: 'price_start', 
-                className: 'text-center',
-                render: function (data, type, row) {
-                    return formatCurrency(data);
-                }
-            },
             { 
                 data: 'price_deal', 
                 className: 'text-center',
@@ -107,14 +93,6 @@
                     return formatCurrency(data);
                 }
             },
-            { 
-                data: 'netto', 
-                className: 'text-center',
-                render: function (data, type, row) {
-                    return formatCurrency(data);
-                }
-            },
-            { data: 'stock', className: 'text-center' },
             {
                 data: 'photo',
                 render: function (data, type, row) {
@@ -133,10 +111,17 @@
                 orderable: false,
                 className: 'text-center',
             },
-            { data: 'description', className: 'text-center' },
+            { data: 'tanggal_pembelian', className: 'text-center' },
+            { 
+                data: 'total_buyer', 
+                className: 'text-center',
+                render: function (data, type, row) {
+                    return formatCurrency(data);
+                }
+            },
             {
                 render: function (data, type, row, meta) {
-                    var editUrl = '{{ url('products') }}' + '/' + row.id + '/edit';
+                    var editUrl = '{{ url('note_buyer') }}' + '/' + row.id + '/edit';
                     return '<a href="' + editUrl + '" class="btn btn-warning btn-sm mr-1">Edit</a>' +
                         '<a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ' + row.id + ')">Delete</a>';
                 },
