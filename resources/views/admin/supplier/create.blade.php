@@ -35,7 +35,7 @@
         <div class="card-header">
             <h3 class="card-title">Create New Product</h3>
         </div>
-        <form method="POST" action="{{ url('transactions') }}">
+        <form method="POST" action="{{ url('note_buyer') }}">
             @csrf
             <div class="card-body">
                 <div class="form-group row">
