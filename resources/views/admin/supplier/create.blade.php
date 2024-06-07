@@ -64,7 +64,7 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                            <input name="transaction_datetime" type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime"/>
+                            <input name="tanggal_pembelian" type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime"/>
                             <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -109,29 +109,9 @@
                         <label>Total Pembayaran</label>
                     </div>
                     <div class="col-lg-9">
-                        <input type="number" class="form-control" id="totalPayment" name="price_total" required readonly>
+                        <input type="total_buyer" class="form-control" id="totalPayment" name="price_total" required readonly>
                     </div>
                 </div>
-        
-                <div class="form-group row">
-                    <div class="col lg-3">
-                        <label>Uang diterima</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <input type="number" class="form-control" id="receivedMoney" name="accept_customer_money" required>
-                    </div>
-                </div>
-                
-                <div class="form-group row">
-                    <div class="col-lg-3">
-                        <label>Uang kembalian</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <input type="text" class="form-control" id="changeMoney" required readonly>
-                        <input type="hidden" id="changeMoneyHidden" name="change_customer_money">
-                    </div>
-                </div>
-        
             <!-- /.card-body -->
         
             <div class="card-footer">
@@ -232,31 +212,6 @@
 
         document.getElementById('totalPayment').value = totalPayment;
     }
-
-
-    // fitur uang kembalian di input
-    // Ambil elemen-elemen input yang diperlukan
-    var receivedMoneyInput = document.getElementById('receivedMoney');
-    var changeMoneyInput = document.getElementById('changeMoney');
-    var changeMoneyHiddenInput = document.getElementById('changeMoneyHidden');
-    var totalPaymentInput = document.getElementById('totalPayment');
-
-    // Tambahkan event listener untuk perubahan pada input 'Uang Diterima'
-    receivedMoneyInput.addEventListener('input', function() {
-        var totalPayment = parseFloat(totalPaymentInput.value.replace(/\D/g, ''));
-        var receivedMoney = parseFloat(this.value.replace(/\D/g, ''));
-
-        // Hitung uang kembalian dan tampilkan dengan format Rupiah
-        var changeMoney = receivedMoney - totalPayment;
-        var formattedChangeMoney = changeMoney.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
-
-        // Perbarui nilai input 'Uang Kembalian'
-        changeMoneyInput.value = formattedChangeMoney;
-
-        // Ubah nilai input tersembunyi 'change_customer_money_hidden' menjadi angka tanpa format Rupiah
-        var changeMoneyWithoutCurrency = changeMoney.toString().replace(/\D/g, '');
-        changeMoneyHiddenInput.value = changeMoneyWithoutCurrency;
-    });
 </script>
 
 @endsection
