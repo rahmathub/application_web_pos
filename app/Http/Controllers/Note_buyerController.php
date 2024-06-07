@@ -20,12 +20,12 @@ class Note_buyerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Store $store)
     {
         $notebuyer = Note_buyer::all();
-        $store = Store::all();
         $products = Product::all();
-        return view ('admin.supplier.create', compact('notebuyer', 'store', 'products'));
+        return view('admin.supplier.create', compact('notebuyer', 'store', 'products'));
+        // disengaja compact tulis store karena untuk membawa id dari table store
     }
 
     /**

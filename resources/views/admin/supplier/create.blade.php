@@ -37,6 +37,9 @@
         </div>
         <form method="POST" action="{{ url('note_buyer') }}">
             @csrf
+            {{-- mengambil id dari url atau dari table store mengikut ke create --}}
+            <input type="hidden" name="store_id" value="{{ $store->id }}">
+
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-lg-3">

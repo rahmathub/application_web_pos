@@ -45,6 +45,14 @@ Route::resource('Product_Detail', Product_DetailController::class);
 Route::resource('store', StoreController::class);
 Route::resource('note_buyer', Note_buyerController::class);
 
+// untuk membawa tombol creaate id dari table store ke table note_buyer
+Route::get('store/{store}', [StoreController::class, 'show'])->name('store.show');
+
+// untuk bisa create dari tombol create ke halaman create yang membawa id dari table store
+Route::get('note_buyer/{store}/create', [Note_buyerController::class, 'create'])->name('note_buyer.create');
+
+
+
 // API
 Route::get('/api/products', [App\Http\Controllers\ProductController::class, 'api']);
 Route::get('/api/transactions', [App\Http\Controllers\TransactionController::class, 'api']);

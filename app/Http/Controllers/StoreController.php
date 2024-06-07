@@ -60,11 +60,12 @@ class StoreController extends Controller
      */
     public function show(Store $store)
     {
-        $store = Store::all();
         $storedetail = Note_buyer::all();
         $product = Product::all();
-
+    
         return view('admin.supplier.detail', compact('store', 'storedetail', 'product'));
+        // disengaja compact tulis store karena untuk membawa id dari table store
+
     }
 
     /**

@@ -9,6 +9,8 @@ class Note_buyer_detail extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['note_buyer_id', 'product_id'];
+
     // relasi note buyerdetail dan product
     public function products()
     {

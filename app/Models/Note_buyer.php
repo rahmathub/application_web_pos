@@ -9,6 +9,8 @@ class Note_buyer extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['store_id', 'photo', 'tanggal_pembelian', 'total_buyer'];
+
 
     // relasi note buyer dan store
     public function store()

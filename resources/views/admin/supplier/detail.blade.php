@@ -17,7 +17,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-md-10">
-                                <a href="{{ url('note_buyer/create') }}"  class="btn btn-sm btn-primary pull-right">
+                                <a href="{{ url('note_buyer/' . $store->id . '/create') }}" class="btn btn-sm btn-primary pull-right">
                                     Create New Detail Note
                                 </a>
                             </div>
