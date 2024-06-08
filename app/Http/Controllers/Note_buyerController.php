@@ -6,6 +6,7 @@ use App\Models\Note_buyer;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class Note_buyerController extends Controller
 {
@@ -33,7 +34,20 @@ class Note_buyerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'store_id' => ['required', 'numeric'],
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:5000', // Hanya menerima file gambar dengan ukuran maksimal 5MB
+            'tanggal_pembelian' => ['required', 'date'],
+            'product_id' => ['required', 'array'],
+            'product_id.*' => ['required', 'numeric'],
+            'quantity' => ['required', 'array'],
+            'quantity.*' => ['required', 'numeric'],
+            'price_total' => ['required', 'numeric'],
+        ]);
+
+
+        return $request;
     }
 
     /**
