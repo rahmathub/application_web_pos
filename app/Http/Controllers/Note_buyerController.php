@@ -21,11 +21,12 @@ class Note_buyerController extends Controller
         return view('admin.supplier.index');
     }
 
-    public function api()
+    // membuat api database Note_buyers sesuai id
+    public function api($store_id)
     {
-        $store = Note_buyer::all();
-        $datatables = datatables()->of($store)->addIndexColumn();
-
+        $noteBuyers = Note_buyer::where('store_id', $store_id)->get();
+        $datatables = datatables()->of($noteBuyers)->addIndexColumn();
+    
         return $datatables->make(true);
     }
 

@@ -82,17 +82,13 @@
     
     <script type="text/javascript">
         var actionUrl = '{{ url('note_buyer') }}';
-        var apiUrl = '{{ url('api/note_buyer') }}';
+        
+        // menyesuaikan api sesuai id
+        var apiUrl = '{{ url('api/note_buyer', ['store_id' => $store->id]) }}';
+
     
         var columns = [
             { data: 'DT_RowIndex', className: 'text-center' },
-            { 
-                data: 'price_deal', 
-                className: 'text-center',
-                render: function (data, type, row) {
-                    return formatCurrency(data);
-                }
-            },
             {
                 data: 'photo',
                 render: function (data, type, row) {
