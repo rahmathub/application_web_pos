@@ -83,7 +83,7 @@
     <script type="text/javascript">
         var actionUrl = '{{ url('note_buyer') }}';
         
-        // menyesuaikan api sesuai id
+        // menyesuaikan api sesuai id dari store ke note_buyer
         var apiUrl = '{{ url('api/note_buyer', ['store_id' => $store->id]) }}';
 
     
