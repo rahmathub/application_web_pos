@@ -36,7 +36,7 @@
         <div class="card-header">
             <h3 class="card-title">Create New Product</h3>
         </div>
-        <form method="POST" action="{{ url('note_buyer') }}">
+        <form method="POST" action="{{ url('note_buyer') }}" enctype="multipart/form-data">
             @csrf
             {{-- mengambil id dari url atau dari table store mengikut ke create --}}
             <input type="hidden" name="store_id" value="{{ $store->id }}">
@@ -107,8 +107,8 @@
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
                                     <label>Atur Kuantitas {{ $product->name }} (Rp
-                                        {{ number_format($product->price_start, 0, ',', '.') }}) : Sisa Stok :
-                                        {{ $product->stock }}</label>
+                                        {{ number_format($product->price_start, 0, ',', '.') }}) : Stok Berapa ?
+                                    </label>
                                 </div>
                                 <div class="col-lg-3">
                                     <input type="number" class="form-control" name="quantity[]"
@@ -126,7 +126,7 @@
                         <label>Total Pembayaran</label>
                     </div>
                     <div class="col-lg-9">
-                        <input type="total_buyer" class="form-control" id="totalPayment" name="price_total" required
+                        <input type="total_buyer" class="form-control" id="totalPayment" name="total_buyer" required
                             readonly>
                     </div>
                 </div>

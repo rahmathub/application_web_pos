@@ -60,6 +60,7 @@ Route::get('/api/customers', [App\Http\Controllers\CustomerController::class, 'a
 Route::get('/api/categories', [App\Http\Controllers\CategoryController::class, 'api']);
 Route::get('/api/store', [App\Http\Controllers\StoreController::class, 'api']);
 Route::get('/api/note_buyer', [App\Http\Controllers\Note_buyerController::class, 'api']);
+Route::get('/api/note_buyer_detail', [App\Http\Controllers\Note_buyer_detailController::class, 'api']);
 
 
 

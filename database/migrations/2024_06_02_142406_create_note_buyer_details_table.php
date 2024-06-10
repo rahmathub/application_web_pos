@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('note_buyer_id');
             $table->unsignedBigInteger('product_id');
+            $table->string('qty');
             $table->timestamps();
 
             $table->foreign('note_buyer_id')->references('id')->on('note_buyers');
