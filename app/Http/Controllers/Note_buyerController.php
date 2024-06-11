@@ -30,6 +30,8 @@ class Note_buyerController extends Controller
         return $datatables->make(true);
     }
 
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -111,10 +113,10 @@ class Note_buyerController extends Controller
      */
     public function show(Note_buyer $note_buyer)
     {
-        $storedetail = Note_buyer_detail::all();
+        $buyerdetail = Note_buyer_detail::all();
         $product = Product::all();
     
-        return view('admin.supplier.detail2', compact('note_buyer', 'storedetail', 'product'));
+        return view('admin.supplier.detail2', compact('note_buyer', 'buyerdetail', 'product'));
         // disengaja compact tulis store karena untuk membawa id dari table store
     }
 

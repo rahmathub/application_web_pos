@@ -73,16 +73,25 @@
             <script type="text/javascript">
                 var actionUrl = '{{ url('note_buyer_detail') }}';
 
-                // menyesuaikan api sesuai id dari store ke note_buyer
-                var apiUrl = '{{ url('api/note_buyer_detail', ['note_buyer_id' => $note_buyer->id]) }}';
-
+                // Menyesuaikan api sesuai id dari store ke note_buyer
+                var apiUrl = '{{ url('api/note_buyer_detail_with_products', ['note_buyer_id' => $note_buyer->id]) }}';
 
                 var columns = [{
-                        data: 'DT_RowIndex',
-                        className: 'text-center'
+                        data: null,
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
                     },
                     {
-                        data: 'photo',
+                        data: 'product.name',
+                        className: 'text-center',
+                        orderable: false
+                    },
+                    {
+                        data: 'product.photo',
                         render: function(data, type, row) {
                             return (
                                 '<a href="javascript:void(0)" onclick="controller.openPhotoModal(\'' +
@@ -100,30 +109,16 @@
                         className: 'text-center',
                     },
                     {
-                        data: 'tanggal_pembelian',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'total_buyer',
+                        data: 'product.price_start',
                         className: 'text-center',
                         render: function(data, type, row) {
                             return formatCurrency(data);
                         }
                     },
                     {
-                        render: function(data, type, row, meta) {
-                            var detailUrl = '{{ url('note_buyer') }}' + '/' + row.id;
-                            var editUrl = '{{ url('note_buyer') }}' + '/' + row.id + '/edit';
-
-                            return '<a href="' + detailUrl + '" class="btn btn-primary btn-sm mr-1">Detail Nota</a>' +
-                                '<a href="' + editUrl + '" class="btn btn-warning btn-sm mr-1">Edit</a>' +
-                                '<a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ' + row.id +
-                                ')">Delete</a>';
-                        },
-                        orderable: false,
-                        width: '200px',
-                        className: 'text-center',
-                    }
+                        data: 'note_buyer_detail.qty',
+                        className: 'text-center'
+                    },
                 ];
 
                 function formatCurrency(amount) {
@@ -160,6 +155,10 @@
                                     },
                                 },
                                 columns: columns,
+                                rowCallback: function(row, data, index) {
+                                    var pageInfo = _this.table.page.info();
+                                    $('td:eq(0)', row).html(pageInfo.start + index + 1);
+                                }
                             }).on('xhr', function() {
                                 _this.datas = _this.table.ajax.json().data;
                                 _this.table.draw();
