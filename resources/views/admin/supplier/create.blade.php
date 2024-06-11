@@ -44,7 +44,7 @@
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-lg-3">
-                        <label for="exampleInputFile">Foto Produk</label>
+                        <label for="exampleInputFile">Foto Nota</label>
                     </div>
                     <div class="col-lg-9">
                         <div class="input-group">

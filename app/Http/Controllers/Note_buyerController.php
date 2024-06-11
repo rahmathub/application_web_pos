@@ -111,7 +111,11 @@ class Note_buyerController extends Controller
      */
     public function show(Note_buyer $note_buyer)
     {
-        //
+        $storedetail = Note_buyer_detail::all();
+        $product = Product::all();
+    
+        return view('admin.supplier.detail2', compact('note_buyer', 'storedetail', 'product'));
+        // disengaja compact tulis store karena untuk membawa id dari table store
     }
 
     /**

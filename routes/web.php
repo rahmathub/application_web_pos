@@ -60,10 +60,13 @@ Route::get('/api/customers', [App\Http\Controllers\CustomerController::class, 'a
 Route::get('/api/categories', [App\Http\Controllers\CategoryController::class, 'api']);
 Route::get('/api/store', [App\Http\Controllers\StoreController::class, 'api']);
 // Route::get('/api/note_buyer', [App\Http\Controllers\Note_buyerController::class, 'api']);
-Route::get('/api/note_buyer_detail', [App\Http\Controllers\Note_buyer_detailController::class, 'api']);
+// Route::get('/api/note_buyer_detail', [App\Http\Controllers\Note_buyer_detailController::class, 'api']);
 
 // membuat api dari database note_buyers sesuai id 
 Route::get('/api/note_buyer/{store_id}', [App\Http\Controllers\Note_buyerController::class, 'api']);
 
+// membuat api note note_buyer_detail sesuai id dari table note_buyer
+Route::get('/api/note_buyer_detail/{note_buyer_id}', [App\Http\Controllers\Note_buyer_detailController::class, 'api']);
 
-
+// menggabungkan api note_buyer_details dan products 
+Route::get('/api/note_buyer_detail_with_products/{note_buyer_id}', [App\Http\Controllers\Note_buyer_detailController::class, 'apiWithProducts']);

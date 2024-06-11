@@ -14,27 +14,15 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <a href="{{ url('note_buyer/' . $store->id . '/create') }}"
-                                    class="btn btn-sm btn-primary pull-right">
-                                    Create New Detail Note
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-
                     <div class="card-body">
                         <table id="datatable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th style="width: 10px">No</th>
-                                    <th class="text-center">Foto Nota</th>
-                                    <th class="text-center">Tanggal Pembelian</th>
-                                    <th class="text-center">Total Pembelian</th>
-                                    <th class="text-center">Action</th>
+                                    <th class="text-center">Nama Product</th>
+                                    <th class="text-center">Foto</th>
+                                    <th class="text-center">Harga Modal</th>
+                                    <th class="text-center">quantiti</th>
                                 </tr>
                             </thead>
                         </table>
@@ -83,10 +71,10 @@
             </script>
 
             <script type="text/javascript">
-                var actionUrl = '{{ url('note_buyer') }}';
+                var actionUrl = '{{ url('note_buyer_detail') }}';
 
                 // menyesuaikan api sesuai id dari store ke note_buyer
-                var apiUrl = '{{ url('api/note_buyer', ['store_id' => $store->id]) }}';
+                var apiUrl = '{{ url('api/note_buyer_detail', ['note_buyer_id' => $note_buyer->id]) }}';
 
 
                 var columns = [{
