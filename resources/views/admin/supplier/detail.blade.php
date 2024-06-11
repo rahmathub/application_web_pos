@@ -125,12 +125,8 @@
                     {
                         render: function(data, type, row, meta) {
                             var detailUrl = '{{ url('note_buyer') }}' + '/' + row.id;
-                            var editUrl = '{{ url('note_buyer') }}' + '/' + row.id + '/edit';
 
-                            return '<a href="' + detailUrl + '" class="btn btn-primary btn-sm mr-1">Detail Nota</a>' +
-                                '<a href="' + editUrl + '" class="btn btn-warning btn-sm mr-1">Edit</a>' +
-                                '<a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ' + row.id +
-                                ')">Delete</a>';
+                            return '<a href="' + detailUrl + '" class="btn btn-primary btn-sm mr-1">Detail Nota</a>'
                         },
                         orderable: false,
                         width: '200px',
@@ -180,24 +176,6 @@
                         openPhotoModal(photoUrl) {
                             $('#modalPhoto').attr('src', photoUrl);
                             $('#photoModal').modal('show');
-                        },
-                        deleteData(event, id) {
-                            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-                                const _this = this;
-                                axios
-                                    .delete(_this.actionUrl + '/' + id)
-                                    .then((response) => {
-                                        alert('Data has been removed');
-                                        _this.table
-                                            .row($(event.target).closest('tr'))
-                                            .remove()
-                                            .draw(false);
-                                    })
-                                    .catch((error) => {
-                                        console.error(error);
-                                        alert('An error occurred while deleting data');
-                                    });
-                            }
                         },
                     },
                 });

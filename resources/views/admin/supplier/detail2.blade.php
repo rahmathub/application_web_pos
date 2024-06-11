@@ -168,24 +168,6 @@
                             $('#modalPhoto').attr('src', photoUrl);
                             $('#photoModal').modal('show');
                         },
-                        deleteData(event, id) {
-                            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-                                const _this = this;
-                                axios
-                                    .delete(_this.actionUrl + '/' + id)
-                                    .then((response) => {
-                                        alert('Data has been removed');
-                                        _this.table
-                                            .row($(event.target).closest('tr'))
-                                            .remove()
-                                            .draw(false);
-                                    })
-                                    .catch((error) => {
-                                        console.error(error);
-                                        alert('An error occurred while deleting data');
-                                    });
-                            }
-                        },
                     },
                 });
             </script>
