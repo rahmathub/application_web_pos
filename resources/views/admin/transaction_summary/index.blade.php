@@ -37,7 +37,7 @@
                 <div class="small-box bg-secondary" style="color: #343a40">
                     <div class="inner">
                         <h3>{{ $total_customers }}</h3>
-                        <p>Data total Customers yang sudah transaksi</p>
+                        <p> total Customers yang sudah transaksi</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
@@ -67,24 +67,25 @@
                     <!-- DONUT CHART -->
                     <div class="card card-gray-dark">
                         <div class="card-header">
-                        <h3 class="card-title">Grafik Categori</h3>
-        
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                            <i class="fas fa-times"></i>
-                            </button>
-                        </div>
+                            <h3 class="card-title">Grafik Categori</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body">
-                        <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            <canvas id="donutChart"
+                                style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                         </div>
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
-    
+
                 </div>
                 <!-- /.col (LEFT) -->
                 <div class="col-md-6">
@@ -92,7 +93,7 @@
                     <div class="card card-navy">
                         <div class="card-header">
                             <h3 class="card-title">Grafik Transaksi Bulanan</h3>
-            
+
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
@@ -104,13 +105,14 @@
                         </div>
                         <div class="card-body">
                             <div class="chart">
-                                <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                <canvas id="barChart"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
-    
+
                 </div>
                 <!-- /.col (RIGHT) -->
             </div>
@@ -130,7 +132,7 @@
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
                             {{-- <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span> --}}
-                                <h5 class="description-header">Rp {{ number_format($totalProfit_yesterday, 0, ',', '.') }}</h5>
+                            <h5 class="description-header">Rp {{ number_format($totalProfit_yesterday, 0, ',', '.') }}</h5>
                             <span class="description-text">TOTAL Keuntungan HARI KEMARIN</span>
                         </div>
                         <!-- /.description-block -->
@@ -139,7 +141,7 @@
                     <div class="col-sm-3 col-6">
                         <div class="description-block border-right">
                             {{-- <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span> --}}
-                                <h5 class="description-header">Rp {{ number_format($totalProfit_month, 0, ',', '.') }}</h5>
+                            <h5 class="description-header">Rp {{ number_format($totalProfit_month, 0, ',', '.') }}</h5>
                             <span class="description-text">TOTAL KEUNTUNGAN BULAN LALU</span>
                         </div>
                         <!-- /.description-block -->
@@ -148,10 +150,105 @@
                     <div class="col-sm-3 col-6">
                         <div class="description-block">
                             {{-- <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 18%</span> --}}
-                                <h5 class="description-header">Rp {{ number_format($totalProfit_lastYear, 0, ',', '.') }}</h5>
+                            <h5 class="description-header">Rp {{ number_format($totalProfit_lastYear, 0, ',', '.') }}</h5>
                             <span class="description-text">TOTAL KEUNTUNGAN TAHUN LALU</span>
                         </div>
                         <!-- /.description-block -->
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- bagian keuntungan tahunan --}}
+            <div class="card-footer col-lg-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="card-title">Sales</h3>
+                            <a href="javascript:void(0);">View Report</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <p class="d-flex flex-column">
+                                <span class="text-bold text-lg">$18,230.00</span>
+                                <span>Sales Over Time</span>
+                            </p>
+                            <p class="ml-auto d-flex flex-column text-right">
+                                <span class="text-success">
+                                    <i class="fas fa-arrow-up"></i> 33.1%
+                                </span>
+                                <span class="text-muted">Since last month</span>
+                            </p>
+                        </div>
+                        <!-- /.d-flex -->
+
+                        <div class="position-relative mb-4">
+                            <canvas id="sales-chart" height="200"></canvas>
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-end">
+                            <span class="mr-2">
+                                <i class="fas fa-square text-primary"></i> This year
+                            </span>
+
+                            <span>
+                                <i class="fas fa-square text-gray"></i> Last year
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Online Store Overview</h3>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-sm btn-tool">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-tool">
+                                <i class="fas fa-bars"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                            <p class="text-success text-xl">
+                                <i class="ion ion-ios-refresh-empty"></i>
+                            </p>
+                            <p class="d-flex flex-column text-right">
+                                <span class="font-weight-bold">
+                                    <i class="ion ion-android-arrow-up text-success"></i> 12%
+                                </span>
+                                <span class="text-muted">CONVERSION RATE</span>
+                            </p>
+                        </div>
+                        <!-- /.d-flex -->
+                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                            <p class="text-warning text-xl">
+                                <i class="ion ion-ios-cart-outline"></i>
+                            </p>
+                            <p class="d-flex flex-column text-right">
+                                <span class="font-weight-bold">
+                                    <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
+                                </span>
+                                <span class="text-muted">SALES RATE</span>
+                            </p>
+                        </div>
+                        <!-- /.d-flex -->
+                        <div class="d-flex justify-content-between align-items-center mb-0">
+                            <p class="text-danger text-xl">
+                                <i class="ion ion-ios-people-outline"></i>
+                            </p>
+                            <p class="d-flex flex-column text-right">
+                                <span class="font-weight-bold">
+                                    <i class="ion ion-android-arrow-down text-danger"></i> 1%
+                                </span>
+                                <span class="text-muted">REGISTRATION RATE</span>
+                            </p>
+                        </div>
+                        <!-- /.d-flex -->
                     </div>
                 </div>
             </div>
@@ -165,12 +262,15 @@
 
     <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
 
+    {{-- bagian chart tahunan keuntungan --}}
+    <script src="{{ asset('assets/dist/dashboard3.js') }}"></script>
+
     <script>
         var label_donut = `{!! json_encode($label_donut) !!}`;
         var data_donut = `{!! json_encode($data_donut) !!}`;
         var data_bar = `{!! json_encode($data_bar) !!}`;
 
-        $(function () {
+        $(function() {
             //-------------
             //- DONUT CHART -
             //-------------
@@ -178,17 +278,17 @@
             var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
             var donutData = {
                 labels: JSON.parse(label_donut),
-                datasets: [
-                    {
-                        data: JSON.parse(data_donut),
-                        backgroundColor: ['#343a40', '#007bff', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de', '#81a1c1'],
-                    }
-                ]
+                datasets: [{
+                    data: JSON.parse(data_donut),
+                    backgroundColor: ['#343a40', '#007bff', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de',
+                        '#81a1c1'
+                    ],
+                }]
             }
 
-            var donutOptions     = {
-                maintainAspectRatio : false,
-                responsive : true,
+            var donutOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
             }
             //Create pie or douhnut chart
             // You can switch between pie and douhnut using the method below.
@@ -202,8 +302,10 @@
             //- BAR CHART -
             //-------------
             var areaChartData = {
-                labels : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'Desember'],
-                datasets : JSON.parse(data_bar)
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                    'October', 'November', 'Desember'
+                ],
+                datasets: JSON.parse(data_bar)
             }
             var barChartCanvas = $('#barChart').get(0).getContext('2d')
             var barChartData = $.extend(true, {}, areaChartData)
@@ -213,16 +315,19 @@
             // barChartData.datasets[1] = temp0
 
             var barChartOptions = {
-            responsive              : true,
-            maintainAspectRatio     : false,
-            datasetFill             : false
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
             }
 
             new Chart(barChartCanvas, {
-            type: 'bar',
-            data: barChartData,
-            options: barChartOptions
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
             })
         })
     </script>
+
+
+
 @endsection
