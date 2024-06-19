@@ -17,6 +17,24 @@ class TransactionSummaryController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    // untuk keuntungan tahunan sekarang dan lalu
+    private function getMonthlyProfitData($year)
+    {
+        $data = [];
+        foreach (range(1, 12) as $month) {
+            $totalProfit = Transaction::select(DB::raw("SUM(netto_total) as total"))
+                ->whereYear('transaction_datetime', $year)
+                ->whereMonth('transaction_datetime', $month)
+                ->first()
+                ->total;
+
+            $data[] = $totalProfit ?? 0;
+        }
+
+        return $data;
+    }
+
     public function index()
     {
         $total_keuntungan = DB::table('transactions')->sum('netto_total');
@@ -47,11 +65,11 @@ class TransactionSummaryController extends Controller
         $totalProfit_lastYear = Transaction::whereYear('transaction_datetime', $lastYear->year)
             ->sum('netto_total');
 
-        
+
         // Grafik Penerbit
         $data_donut = Product::select(DB::raw("COUNT(category_id) as total"))->groupBy('category_id')->orderBy('category_id', 'asc')->pluck('total');
         $label_donut = Category::orderBy('categories.id', 'asc')->join('products', 'products.category_id', '=', 'categories.id')->groupBy('categories.name')->pluck('categories.name');
-        
+
         // Bar Grafik Transaction
         $label_bar = ['transaksi'];
         $data_bar = [];
@@ -62,35 +80,51 @@ class TransactionSummaryController extends Controller
             $data_bar[$key]['backgroundColor'] = $key == 1 ? 'rgba[60,141,188,0.9]' : 'rgba(210, 214, 222, 1)';
             $data_month = [];
 
-            foreach (range(1,12) as $month) {
-                if($key == 0) {
+            foreach (range(1, 12) as $month) {
+                if ($key == 0) {
                     $data_month[] = Transaction::select(DB::raw("COUNT(*) as total"))->whereMonth('created_at', $month)->first()->total;
                 } else {
                     $data_month[] = Transaction::select(DB::raw("COUNT(*) as total"))->whereMonth('updated_at', $month)->first()->total;
-
                 }
             }
             $data_bar[$key]['data'] = $data_month;
         }
 
-        return view('admin.transaction_summary.index', 
+
+        // untuk chart tahunan keuntungan bulanan dari tahun lalu dan sekarang
+        $currentYear = Carbon::now()->year;
+        $lastYear = $currentYear - 1;
+
+        $currentYearData = $this->getMonthlyProfitData($currentYear);
+        $lastYearData = $this->getMonthlyProfitData($lastYear);
+
+
+
+        return view(
+            'admin.transaction_summary.index',
             compact(
-            'total_keuntungan',
-            'total_customers',
-            'total_products', 
-            'total_categories',
-            'total_transactions',
-            'totalProfit_today',
-            'totalProfit_yesterday',
-            'totalProfit_month',
-            'totalProfit_lastYear',
-            'data_donut',
-            'label_donut',
-            'data_bar'
-        ));
+                'total_keuntungan',
+                'total_customers',
+                'total_products',
+                'total_categories',
+                'total_transactions',
+                'totalProfit_today',
+                'totalProfit_yesterday',
+                'totalProfit_month',
+                'totalProfit_lastYear',
+                'data_donut',
+                'label_donut',
+                'data_bar',
+                'currentYearData',
+                'lastYearData'
+            )
+        );
     }
 
-    public function api() {
+
+
+    public function api()
+    {
         $transaction_summaries = Transaction_summary::all();
         $datatables = datatables()->of($transaction_summaries)->addIndexColumn();
 

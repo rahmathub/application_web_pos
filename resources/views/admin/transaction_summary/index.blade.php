@@ -161,11 +161,11 @@
 
             {{-- bagian keuntungan tahunan --}}
             <div class="card-footer col-lg-12">
+                {{-- bulan 1 sampai bulan 6 --}}
                 <div class="card">
                     <div class="card-header border-0">
                         <div class="d-flex justify-content-between">
-                            <h3 class="card-title">Sales</h3>
-                            <a href="javascript:void(0);">View Report</a>
+                            <h3 class="card-title">Penjualan (Jan - Jun)</h3>
                         </div>
                     </div>
                     <div class="card-body">
@@ -184,16 +184,54 @@
                         <!-- /.d-flex -->
 
                         <div class="position-relative mb-4">
-                            <canvas id="sales-chart" height="200"></canvas>
+                            <canvas id="sales-chart1" height="200"></canvas>
                         </div>
 
                         <div class="d-flex flex-row justify-content-end">
                             <span class="mr-2">
-                                <i class="fas fa-square text-primary"></i> This year
+                                <i class="fas fa-square text-primary"></i> Tahun Ini
                             </span>
 
                             <span>
-                                <i class="fas fa-square text-gray"></i> Last year
+                                <i class="fas fa-square text-gray"></i> Tahun Lalu
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- bulan 7 sampai 12 --}}
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="card-title">Penjualan (Jul - Dec)</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <p class="d-flex flex-column">
+                                <span class="text-bold text-lg">$18,230.00</span>
+                                <span>Sales Over Time</span>
+                            </p>
+                            <p class="ml-auto d-flex flex-column text-right">
+                                <span class="text-success">
+                                    <i class="fas fa-arrow-up"></i> 33.1%
+                                </span>
+                                <span class="text-muted">Since last month</span>
+                            </p>
+                        </div>
+                        <!-- /.d-flex -->
+
+                        <div class="position-relative mb-4">
+                            <canvas id="sales-chart2" height="200"></canvas>
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-end">
+                            <span class="mr-2">
+                                <i class="fas fa-square text-primary"></i> Tahun Ini
+                            </span>
+
+                            <span>
+                                <i class="fas fa-square text-gray"></i> Tahun Lalu
                             </span>
                         </div>
                     </div>
@@ -263,7 +301,131 @@
     <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
 
     {{-- bagian chart tahunan keuntungan --}}
-    <script src="{{ asset('assets/dist/dashboard3.js') }}"></script>
+    {{-- <script src="{{ asset('assets/dist/dashboard3.js') }}"></script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx1 = document.getElementById('sales-chart1').getContext('2d');
+            var salesChart1 = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                            label: 'This year',
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: @json(array_slice($currentYearData, 0, 6))
+                        },
+                        {
+                            label: 'Last year',
+                            backgroundColor: '#ced4da',
+                            borderColor: '#ced4da',
+                            data: @json(array_slice($lastYearData, 0, 6))
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    legend: {
+                        display: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    if (value >= 1000) {
+                                        value /= 1000;
+                                        value += 'k';
+                                    }
+                                    return 'Rp ' + value;
+                                }
+                            }
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    }
+                }
+            });
+
+            var ctx2 = document.getElementById('sales-chart2').getContext('2d');
+            var salesChart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                            label: 'This year',
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: @json(array_slice($currentYearData, 6, 6))
+                        },
+                        {
+                            label: 'Last year',
+                            backgroundColor: '#ced4da',
+                            borderColor: '#ced4da',
+                            data: @json(array_slice($lastYearData, 6, 6))
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: true
+                    },
+                    legend: {
+                        display: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    if (value >= 1000) {
+                                        value /= 1000;
+                                        value += 'k';
+                                    }
+                                    return 'Rp ' + value;
+                                }
+                            }
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
 
     <script>
         var label_donut = `{!! json_encode($label_donut) !!}`;
