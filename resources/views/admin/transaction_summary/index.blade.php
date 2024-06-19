@@ -171,14 +171,25 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <p class="d-flex flex-column">
-                                <span class="text-bold text-lg">$18,230.00</span>
-                                <span>Sales Over Time</span>
+                                <span class="text-bold text-lg">Tahun Ini Rp
+                                    {{ number_format($totalProfitCurrentYear, 0, ',', '.') }}</span>
+                                <span>Total Penjualan</span>
                             </p>
                             <p class="ml-auto d-flex flex-column text-right">
-                                <span class="text-success">
-                                    <i class="fas fa-arrow-up"></i> 33.1%
-                                </span>
-                                <span class="text-muted">Since last month</span>
+                                {{-- Menggunakan Conditional Statemen untuk persentase --}}
+                                @if ($profitPercentageChange >= 0)
+                                    <span class="text-success">
+                                        Persentase Tahunan
+                                        <i class="fas fa-arrow-up"></i>Naik {{ $profitPercentageChange }}%
+                                    </span>
+                                @else
+                                    <span class="text-danger">
+                                        Persentase Tahunan
+                                        <i class="fas fa-arrow-down"></i>Turun {{ $profitPercentageChange }}%
+                                    </span>
+                                @endif
+
+                                <span class="text-muted">Perbandingan Tahun Lalu dari bulan 1-6</span>
                             </p>
                         </div>
                         <!-- /.d-flex -->
@@ -209,14 +220,24 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <p class="d-flex flex-column">
-                                <span class="text-bold text-lg">$18,230.00</span>
-                                <span>Sales Over Time</span>
+                                <span class="text-bold text-lg">Tahun Lalu Rp
+                                    {{ number_format($totalProfit_lastYear, 0, ',', '.') }}</span>
+                                <span>Total Penjualan</span>
                             </p>
                             <p class="ml-auto d-flex flex-column text-right">
-                                <span class="text-success">
-                                    <i class="fas fa-arrow-up"></i> 33.1%
-                                </span>
-                                <span class="text-muted">Since last month</span>
+                                {{-- Menggunakan Conditional Statemen untuk persentase --}}
+                                @if ($profitPercentageChange >= 0)
+                                    <span class="text-success">
+                                        Persentase Tahunan
+                                        <i class="fas fa-arrow-up"></i>Naik {{ $profitPercentageChange }}%
+                                    </span>
+                                @else
+                                    <span class="text-danger">
+                                        Persentase Tahunan
+                                        <i class="fas fa-arrow-down"></i>Turun {{ $profitPercentageChange }}%
+                                    </span>
+                                @endif
+                                <span class="text-muted">Perbandingan Tahun Lalu dari bulan 7-12</span>
                             </p>
                         </div>
                         <!-- /.d-flex -->
@@ -300,9 +321,7 @@
 
     <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
 
-    {{-- bagian chart tahunan keuntungan --}}
-    {{-- <script src="{{ asset('assets/dist/dashboard3.js') }}"></script> --}}
-
+    {{-- Chart untuk tahun ini dan tahun lalu dalam keuntungan --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var ctx1 = document.getElementById('sales-chart1').getContext('2d');

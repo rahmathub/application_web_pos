@@ -35,6 +35,17 @@ class TransactionSummaryController extends Controller
         return $data;
     }
 
+    // menghitung persentase keuntungan
+    private function calculateProfitPercentageChange($totalProfit_lastYear, $currentYearProfit)
+    {
+        if ($totalProfit_lastYear == 0) {
+            return $currentYearProfit > 0 ? 100 : 0;
+        }
+
+        $percentageChange = (($currentYearProfit - $totalProfit_lastYear) / $totalProfit_lastYear) * 100;
+        return round($percentageChange, 2); // Membulatkan ke dua desimal
+    }
+
     public function index()
     {
         $total_keuntungan = DB::table('transactions')->sum('netto_total');
@@ -63,6 +74,11 @@ class TransactionSummaryController extends Controller
         $lastYear = Carbon::now()->subYear();
 
         $totalProfit_lastYear = Transaction::whereYear('transaction_datetime', $lastYear->year)
+            ->sum('netto_total');
+
+        // Menghitung total keuntungan tahun ini
+        $currentYear = Carbon::now()->year;
+        $totalProfitCurrentYear = Transaction::whereYear('transaction_datetime', $currentYear)
             ->sum('netto_total');
 
 
@@ -98,6 +114,10 @@ class TransactionSummaryController extends Controller
         $currentYearData = $this->getMonthlyProfitData($currentYear);
         $lastYearData = $this->getMonthlyProfitData($lastYear);
 
+        // Menghitung persentase perubahan keuntungan
+        $profitPercentageChange = $this->calculateProfitPercentageChange($totalProfit_lastYear, $totalProfitCurrentYear);
+
+
 
 
         return view(
@@ -112,11 +132,13 @@ class TransactionSummaryController extends Controller
                 'totalProfit_yesterday',
                 'totalProfit_month',
                 'totalProfit_lastYear',
+                'totalProfitCurrentYear',
                 'data_donut',
                 'label_donut',
                 'data_bar',
                 'currentYearData',
-                'lastYearData'
+                'lastYearData',
+                'profitPercentageChange'
             )
         );
     }
