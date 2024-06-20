@@ -118,13 +118,14 @@ class TransactionSummaryController extends Controller
         // Menghitung persentase perubahan keuntungan
         $profitPercentageChange = $this->calculateProfitPercentageChange($totalProfit_lastYear, $totalProfitCurrentYear);
 
-        // menghitung 10 rank product
+        // menghitung 10 rank product selama sebulan terakhir
         $topProducts = TransactionDetail::select('product_id', DB::raw('count(*) as total_sales'))
-        ->groupBy('product_id')
-        ->orderByDesc('total_sales')
-        ->limit(10)
-        ->with('product') // Assumes you have a relationship set up in the TransactionDetail model
-        ->get();
+            ->where('created_at', '>=', Carbon::now()->subMonth())
+            ->groupBy('product_id')
+            ->orderByDesc('total_sales')
+            ->limit(10)
+            ->with('product') // Assumes you have a relationship set up in the TransactionDetail model
+            ->get();
 
 
         return view(

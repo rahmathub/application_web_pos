@@ -261,7 +261,7 @@
                 {{-- membuat table barang yang sering di beli top 10 ranks --}}
                 <div class="card">
                     <div class="card-header border-0">
-                        <h3 class="card-title">Top Rank 10 Products</h3>
+                        <h3 class="card-title">Top Rank 10 Products Last Month</h3>
                     </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-striped table-valign-middle">
