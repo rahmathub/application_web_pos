@@ -258,58 +258,42 @@
                     </div>
                 </div>
                 <!-- /.card -->
-
+                {{-- membuat table barang yang sering di beli top 10 ranks --}}
                 <div class="card">
                     <div class="card-header border-0">
-                        <h3 class="card-title">Online Store Overview</h3>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-sm btn-tool">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-tool">
-                                <i class="fas fa-bars"></i>
-                            </a>
-                        </div>
+                        <h3 class="card-title">Top Rank 10 Products</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                            <p class="text-success text-xl">
-                                <i class="ion ion-ios-refresh-empty"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right">
-                                <span class="font-weight-bold">
-                                    <i class="ion ion-android-arrow-up text-success"></i> 12%
-                                </span>
-                                <span class="text-muted">CONVERSION RATE</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                            <p class="text-warning text-xl">
-                                <i class="ion ion-ios-cart-outline"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right">
-                                <span class="font-weight-bold">
-                                    <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                                </span>
-                                <span class="text-muted">SALES RATE</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                        <div class="d-flex justify-content-between align-items-center mb-0">
-                            <p class="text-danger text-xl">
-                                <i class="ion ion-ios-people-outline"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right">
-                                <span class="font-weight-bold">
-                                    <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                                </span>
-                                <span class="text-muted">REGISTRATION RATE</span>
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-striped table-valign-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nama Product</th>
+                                    <th>Harga</th>
+                                    <th>Terjual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($topProducts as $product)
+                                <tr>
+                                    <td>
+                                        <img src="{{ $product->product->photo ?? 'dist/img/default-150x150.png' }}" alt="{{ $product->product->name }}"
+                                            class="img-circle img-size-32 mr-2">
+                                        {{ $product->product->name }}
+                                    </td>
+                                    <td>Rp {{ number_format($product->product->price_deal, 0, ',', '.') }}</td>
+                                    <td>
+                                        <small class="text-success mr-1">
+                                            <i class="fas fa-arrow-up"></i>
+                                            {{ number_format($product->total_sales) }} total product
+                                        </small>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+                <!-- /.card -->
             </div>
         </div><!-- /.container-fluid -->
     </section>

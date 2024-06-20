@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
@@ -117,7 +118,13 @@ class TransactionSummaryController extends Controller
         // Menghitung persentase perubahan keuntungan
         $profitPercentageChange = $this->calculateProfitPercentageChange($totalProfit_lastYear, $totalProfitCurrentYear);
 
-
+        // menghitung 10 rank product
+        $topProducts = TransactionDetail::select('product_id', DB::raw('count(*) as total_sales'))
+        ->groupBy('product_id')
+        ->orderByDesc('total_sales')
+        ->limit(10)
+        ->with('product') // Assumes you have a relationship set up in the TransactionDetail model
+        ->get();
 
 
         return view(
@@ -138,7 +145,8 @@ class TransactionSummaryController extends Controller
                 'data_bar',
                 'currentYearData',
                 'lastYearData',
-                'profitPercentageChange'
+                'profitPercentageChange',
+                'topProducts'
             )
         );
     }
