@@ -10,3 +10,7 @@
 ## About Laravel
 
 Terima kasih saya melakukan update di tahun 2024 ini untuk web pos saya
+- sudah terupdate yaitu saya menambahkan chart keuntungan tahunan sekarang dan tahun lalu supaya bisa memonitor keuntungan
+- membuat 10 rank produk terjual dalam bulan terakhir agar bisa mengetahui barang yang lancar penjualan
+- berhasil membuat nota barang  atau suplai barang masing masing dan juga bisa di create product sesuai nota barang
+- CRUD nota barang berhasil dan detail nota barang berhasil
