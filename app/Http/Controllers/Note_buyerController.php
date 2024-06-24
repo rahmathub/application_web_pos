@@ -48,10 +48,12 @@ class Note_buyerController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
+
         // Validasi input
         $validatedData = $request->validate([
             'store_id' => ['required', 'numeric'],
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:5000', // Hanya menerima file gambar dengan ukuran maksimal 5MB
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:7000', // Hanya menerima file gambar dengan ukuran maksimal 7MB
             'tanggal_pembelian' => ['required', 'date_format:"m/d/Y g:i A"'],
             'product_id' => ['required', 'array'],
             'product_id.*' => ['required', 'numeric'],
@@ -106,7 +108,7 @@ class Note_buyerController extends Controller
 
         // Redirect ke halaman sebelumnya dengan ID store
         $store_id = $data['store_id'];
-        return redirect()->route('store.show', ['store' => $store_id])->with('success', 'Note Buyer created successfully.');
+        // return redirect()->route('store.show', ['store' => $store_id])->with('success', 'Note Buyer created successfully.');
     }
     /**
      * Display the specified resource.

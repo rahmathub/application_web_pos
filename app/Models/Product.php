@@ -25,7 +25,7 @@ class Product extends Model
             'price_deal' => 'required',
             'netto' => 'required',
             'stock' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5000',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:7000',
             'description' => 'required',
         ]);
 

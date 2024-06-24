@@ -15,7 +15,8 @@ class ProductController extends Controller
 {
 
     // security
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
     /**
@@ -32,7 +33,7 @@ class ProductController extends Controller
     {
         $products = Product::with('category')->get();
         $datatables = datatables()->of($products)->addIndexColumn();
-    
+
         return $datatables->make(true);
     }
 
@@ -60,18 +61,18 @@ class ProductController extends Controller
             'price_deal' => 'required',
             'netto' => 'required',
             'stock' => 'required',
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:5000', // Hanya menerima file gambar dengan ukuran maksimal 5MB
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:7000', // Hanya menerima file gambar dengan ukuran maksimal 7MB
             'description' => 'required',
         ]);
-    
+
         // Cek jika validasi gagal
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Mendapatkan data input
         $data = $request->except('_token');
-    
+
         // Upload file gambar
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
@@ -80,10 +81,10 @@ class ProductController extends Controller
             $file->move(public_path($path), $filename);
             $data['photo'] = $path . '/' . $filename;
         }
-    
+
         // Simpan data ke database
         $product = Product::create($data);
-    
+
         // Alert ketika berhasil upload
         if ($product) {
             return redirect()->route('products.index')->with('success', 'Produk berhasil diupload!');
@@ -126,9 +127,9 @@ class ProductController extends Controller
             'netto' => 'required',
             'stock' => 'required',
             'description' => 'required',
-            'photo' => 'image|mimes:jpeg,png,jpg|max:5000',
+            'photo' => 'image|mimes:jpeg,png,jpg|max:7000',
         ]);
-    
+
         // Cek apakah pengguna ingin menghapus foto yang ada
         if ($request->has('delete_photo') && $request->delete_photo == '1') {
             if ($product->photo) {
@@ -139,10 +140,10 @@ class ProductController extends Controller
                 $product->photo = null;
             }
         }
-    
+
         // Simpan nama foto yang ada sebelumnya
         $existingPhoto = $product->photo;
-    
+
         // Mengisi data produk dengan input yang diberikan
         $product->name = $request->input('name');
         $product->category_id = $request->input('category_id');
@@ -151,7 +152,7 @@ class ProductController extends Controller
         $product->netto = $request->input('netto');
         $product->stock = $request->input('stock');
         $product->description = $request->input('description');
-    
+
         // Upload foto baru jika ada
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             // Hapus foto yang ada sebelumnya
@@ -161,31 +162,32 @@ class ProductController extends Controller
                     unlink($imagePath);
                 }
             }
-    
+
             // Upload foto baru
             $imageName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $request->file('photo')->move(public_path('images'), $imageName);
             $product->photo = 'images/' . $imageName;
         }
-    
+
         // Simpan perubahan pada produk
         $product->save();
-    
+
         // Jika tidak ada file foto baru diunggah dan tidak ada perubahan pada file foto, tetapkan kembali foto yang ada sebelumnya
         if (!$request->hasFile('photo') && !$request->has('delete_photo') && $existingPhoto) {
             $product->photo = $existingPhoto;
             $product->save();
         }
-    
+
         return view('admin.product.index');
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(Product $product)
     {
         // Hapus file foto dari direktori public/images/
@@ -195,10 +197,10 @@ class ProductController extends Controller
                 unlink($photoPath);
             }
         }
-    
+
         // Hapus entitas produk
         $product->delete();
-    
+
         return response()->json(['message' => 'Product deleted successfully'], 200);
     }
 }
