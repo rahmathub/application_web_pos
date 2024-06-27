@@ -119,13 +119,39 @@ class TransactionSummaryController extends Controller
         $profitPercentageChange = $this->calculateProfitPercentageChange($totalProfit_lastYear, $totalProfitCurrentYear);
 
         // menghitung 10 rank product selama sebulan terakhir
-        $topProducts = TransactionDetail::select('product_id', DB::raw('count(*) as total_sales'))
+        $topProducts = TransactionDetail::select('product_id', DB::raw('SUM(qty) as total_sales'))
             ->where('created_at', '>=', Carbon::now()->subMonth())
             ->groupBy('product_id')
             ->orderByDesc('total_sales')
             ->limit(10)
-            ->with('product') // Assumes you have a relationship set up in the TransactionDetail model
+            ->with('product') // Asumsikan ada relasi 'product' di model TransactionDetail
             ->get();
+
+        // Keuntungan harian di buatkan char
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $dailyProfits = DB::table('transactions')
+            ->select(DB::raw('DATE(transaction_datetime) as date'), DB::raw('SUM(netto_total) as total_profit'))
+            ->whereBetween('transaction_datetime', [$startOfMonth, $endOfMonth])
+            ->groupBy(DB::raw('DATE(transaction_datetime)'))
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        // Buat array tanggal dari 1 hingga akhir bulan
+        $dates = [];
+        $currentDate = $startOfMonth;
+        while ($currentDate <= $endOfMonth) {
+            $dates[] = $currentDate->format('Y-m-d');
+            $currentDate->addDay();
+        }
+
+        // Format data untuk chart keuntungan harian
+        $chartData = [];
+        foreach ($dates as $date) {
+            $chartData[] = $dailyProfits->get($date)->total_profit ?? 0;
+        }
 
 
         return view(
@@ -147,7 +173,9 @@ class TransactionSummaryController extends Controller
                 'currentYearData',
                 'lastYearData',
                 'profitPercentageChange',
-                'topProducts'
+                'topProducts',
+                'chartData',
+                'dates'
             )
         );
     }

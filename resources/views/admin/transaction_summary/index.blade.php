@@ -159,6 +159,20 @@
 
             </div>
 
+            {{-- bagian keuntungan Harian --}}
+            <div class="card-footer col-lg-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Keuntungan Harian</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="position-relative mb-4">
+                            <canvas id="daily-profit-chart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- bagian keuntungan tahunan --}}
             <div class="card-footer col-lg-12">
                 {{-- bulan 1 sampai bulan 6 --}}
@@ -274,20 +288,20 @@
                             </thead>
                             <tbody>
                                 @foreach ($topProducts as $product)
-                                <tr>
-                                    <td>
-                                        <img src="{{ $product->product->photo ?? 'dist/img/default-150x150.png' }}" alt="{{ $product->product->name }}"
-                                            class="img-circle img-size-32 mr-2">
-                                        {{ $product->product->name }}
-                                    </td>
-                                    <td>Rp {{ number_format($product->product->price_deal, 0, ',', '.') }}</td>
-                                    <td>
-                                        <small class="text-success mr-1">
-                                            <i class="fas fa-arrow-up"></i>
-                                            {{ number_format($product->total_sales) }} total product
-                                        </small>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <img src="{{ $product->product->photo ?? 'dist/img/default-150x150.png' }}"
+                                                alt="{{ $product->product->name }}" class="img-circle img-size-32 mr-2">
+                                            {{ $product->product->name }}
+                                        </td>
+                                        <td>Rp {{ number_format($product->product->price_deal, 0, ',', '.') }}</td>
+                                        <td>
+                                            <small class="text-success mr-1">
+                                                <i class="fas fa-arrow-up"></i>
+                                                {{ number_format($product->total_sales) }} total product
+                                            </small>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -308,6 +322,7 @@
     {{-- Chart untuk tahun ini dan tahun lalu dalam keuntungan --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Chart untuk penjualan Jan-Jun
             var ctx1 = document.getElementById('sales-chart1').getContext('2d');
             var salesChart1 = new Chart(ctx1, {
                 type: 'bar',
@@ -331,7 +346,13 @@
                     maintainAspectRatio: false,
                     tooltips: {
                         mode: 'index',
-                        intersect: true
+                        intersect: true,
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var value = tooltipItem.yLabel;
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
+                        }
                     },
                     hover: {
                         mode: 'index',
@@ -351,11 +372,7 @@
                             ticks: {
                                 beginAtZero: true,
                                 callback: function(value) {
-                                    if (value >= 1000) {
-                                        value /= 1000;
-                                        value += 'k';
-                                    }
-                                    return 'Rp ' + value;
+                                    return 'Rp ' + value.toLocaleString('id-ID');
                                 }
                             }
                         }],
@@ -367,7 +384,8 @@
                     }
                 }
             });
-
+    
+            // Chart untuk penjualan Jul-Dec
             var ctx2 = document.getElementById('sales-chart2').getContext('2d');
             var salesChart2 = new Chart(ctx2, {
                 type: 'bar',
@@ -391,7 +409,13 @@
                     maintainAspectRatio: false,
                     tooltips: {
                         mode: 'index',
-                        intersect: true
+                        intersect: true,
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var value = tooltipItem.yLabel;
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
+                        }
                     },
                     hover: {
                         mode: 'index',
@@ -411,11 +435,7 @@
                             ticks: {
                                 beginAtZero: true,
                                 callback: function(value) {
-                                    if (value >= 1000) {
-                                        value /= 1000;
-                                        value += 'k';
-                                    }
-                                    return 'Rp ' + value;
+                                    return 'Rp ' + value.toLocaleString('id-ID');
                                 }
                             }
                         }],
@@ -429,6 +449,64 @@
             });
         });
     </script>
+    
+
+    {{-- code untuk chart keuntungan harian --}}
+    <script>
+        var ctx = document.getElementById('daily-profit-chart').getContext('2d');
+        var dailyProfitChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($dates),
+                datasets: [{
+                    label: 'Keuntungan Harian',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    data: @json($chartData),
+                    fill: false
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    mode: 'index',
+                    intersect: true,
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var value = tooltipItem.yLabel;
+                            return 'Rp ' + value.toLocaleString('id-ID');
+                        }
+                    }
+                },
+                hover: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value) {
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
+                        },
+                        gridLines: {
+                            display: true,
+                            lineWidth: '4px',
+                            color: 'rgba(0, 0, 0, .2)',
+                            zeroLineColor: 'transparent'
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
 
     <script>
         var label_donut = `{!! json_encode($label_donut) !!}`;
