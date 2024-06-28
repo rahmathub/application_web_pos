@@ -14,3 +14,5 @@ Terima kasih saya melakukan update di tahun 2024 ini untuk web pos saya
 - membuat 10 rank produk terjual dalam bulan terakhir agar bisa mengetahui barang yang lancar penjualan
 - berhasil membuat nota barang  atau suplai barang masing masing dan juga bisa di create product sesuai nota barang
 - CRUD nota barang berhasil dan detail nota barang berhasil
+- Membuat Chart Keuntungan harian dari bulan sekarang agar bisa memantau
+- Membuat filter tanggal transaksi agar rapi
