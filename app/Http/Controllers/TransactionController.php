@@ -25,12 +25,38 @@ class TransactionController extends Controller
         return view('admin.transaction.index', Compact('data_customer'));
     }
 
-    public function api() {
-        $transactions = Transaction::with('customer')->get();
+    public function api(Request $request)
+    {
+        $transactions = Transaction::with('customer')
+            ->select('id', 'transaction_datetime', 'product_total', 'price_total', 'netto_total', 'accept_customer_money', 'change_customer_money', 'customer_id');
+    
+        if ($request->has('tanggalTransaksiFilter')) {
+            $filter = $request->tanggalTransaksiFilter;
+    
+            if ($filter === "") {
+                // Tampilkan semua data jika filter kosong
+                $transactions->whereNotNull('id');
+            } else {
+                if ($filter === "1") {
+                    // Filter tanggal transaksi hari ini
+                    $transactions->whereDate('transaction_datetime', now()->toDateString());
+                } elseif ($filter === "7") {
+                    // Filter tanggal transaksi 7 hari terakhir
+                    $tanggalFilter = now()->subDays(6)->toDateString();
+                    $transactions->where('transaction_datetime', '>=', $tanggalFilter);
+                } elseif ($filter === "30") {
+                    // Filter tanggal transaksi 30 hari terakhir
+                    $tanggalFilter = now()->subDays(29)->toDateString();
+                    $transactions->where('transaction_datetime', '>=', $tanggalFilter);
+                }
+            }
+        }
+    
         $datatables = datatables()->of($transactions)->addIndexColumn();
-
+    
         return $datatables->make(true);
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -39,7 +65,7 @@ class TransactionController extends Controller
     {
         $costumerName = Customer::all();
         $products = Product::all();
-        return view ('admin.transaction.create', compact('costumerName', 'products'));
+        return view('admin.transaction.create', compact('costumerName', 'products'));
     }
 
     /**
@@ -59,12 +85,12 @@ class TransactionController extends Controller
             'accept_customer_money' => ['required', 'numeric'],
             'change_customer_money' => ['required', 'numeric'],
         ]);
-    
+
         // Jika validasi gagal, kembalikan respon dengan pesan error
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Mendapatkan input dari request
         $customer_id = $request->input('customer_id');
         $transaction_datetime = $request->input('transaction_datetime');
@@ -73,26 +99,26 @@ class TransactionController extends Controller
         $price_total = $request->input('price_total');
         $accept_customer_money = $request->input('accept_customer_money');
         $change_customer_money = $request->input('change_customer_money');
-    
+
         // Menghitung total produk
         $product_total = count($product_ids);
-    
+
         // Menghitung netto_total berdasarkan bahan yang diberikan
         $netto_total = 0;
-    
+
         foreach ($product_ids as $index => $product_id) {
             if (isset($quantities[$index])) {
                 $quantity = $quantities[$index];
-    
+
                 // Mendapatkan harga produk dari database berdasarkan product_id
                 $product = Product::find($product_id);
                 $product_netto = $product->netto;
-    
+
                 // Menghitung netto_total berdasarkan netto produk dan kuantitas
                 $netto_total += $product_netto * $quantity;
             }
         }
-    
+
         // Membuat transaksi baru
         $transaction = new Transaction();
         $transaction->customer_id = $customer_id;
@@ -102,28 +128,28 @@ class TransactionController extends Controller
         $transaction->change_customer_money = $change_customer_money;
         $transaction->product_total = $product_total;
         $transaction->netto_total = $netto_total;
-    
+
         $transaction->save();
-    
+
         // Menyimpan detail transaksi untuk setiap produk yang dipilih
         foreach ($product_ids as $index => $product_id) {
             if (isset($quantities[$index])) {
                 $quantity = $quantities[$index];
-    
+
                 // Membuat detail transaksi baru
                 $transactionDetail = new TransactionDetail();
                 $transactionDetail->transaction_id = $transaction->id;
                 $transactionDetail->product_id = $product_id;
                 $transactionDetail->qty = $quantity;
-    
+
                 // Mendapatkan harga produk dari database
                 $product = Product::find($product_id);
                 $transactionDetail->price = $product->price_deal;
-    
+
                 try {
                     // Simpan data transaksi detail ke database
                     $transactionDetail->save();
-    
+
                     // Mengurangi stok produk berdasarkan jumlah yang dibeli
                     $product->stock -= $quantity;
                     $product->save();
@@ -134,13 +160,13 @@ class TransactionController extends Controller
                 }
             }
         }
-    
+
         // Redirect atau lakukan tindakan selanjutnya
         return redirect()->route('transactions.index');
     }
-    
+
     // return $request;
-    
+
     /**
      * Display the specified resource.
      */
@@ -162,10 +188,10 @@ class TransactionController extends Controller
         $products = Product::all();
         $transactionDetail = TransactionDetail::all();
         $selectedProductIds = $transaction->transactionDetails->pluck('product_id')->toArray();
-    
+
         return view('admin.transaction.edit', compact('costumerName', 'products', 'transaction', 'transactionDetail', 'selectedProductIds'));
     }
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -184,12 +210,12 @@ class TransactionController extends Controller
             'accept_customer_money' => ['required', 'numeric'],
             'change_customer_money' => ['required', 'numeric'],
         ]);
-    
+
         // Jika validasi gagal, kembalikan respon dengan pesan error
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
         // Mendapatkan input dari request
         $customer_id = $request->input('customer_id');
         $transaction_datetime = $request->input('transaction_datetime');
@@ -198,21 +224,21 @@ class TransactionController extends Controller
         $price_total = $request->input('price_total');
         $accept_customer_money = $request->input('accept_customer_money');
         $change_customer_money = $request->input('change_customer_money');
-    
+
         // Mengupdate data transaksi
         $transaction->customer_id = $customer_id;
         $transaction->transaction_datetime = date('Y-m-d H:i:s', strtotime($transaction_datetime));
         $transaction->price_total = $price_total;
         $transaction->accept_customer_money = $accept_customer_money;
         $transaction->change_customer_money = $change_customer_money;
-    
+
         // Menghitung total produk
         $product_total = count($product_ids);
         $transaction->product_total = $product_total;
-    
+
         // Menghitung netto_total berdasarkan bahan yang diberikan
         $netto_total = 0;
-    
+
         // Loop untuk mengupdate stok produk berdasarkan perubahan kuantitas
         foreach ($product_ids as $index => $product_id) {
             if (isset($quantities[$index])) {
@@ -245,7 +271,7 @@ class TransactionController extends Controller
             }
         }
 
-    
+
         // Menghapus detail transaksi yang tidak ada dalam perubahan kuantitas
         $existingProductIds = $transaction->transactionDetails()->pluck('product_id')->toArray();
         $productIdsToDelete = array_diff($existingProductIds, $product_ids);
@@ -258,13 +284,13 @@ class TransactionController extends Controller
             }
             $transaction->transactionDetails()->whereIn('product_id', $productIdsToDelete)->delete();
         }
-    
+
         // Mengupdate netto_total pada transaksi
         $transaction->netto_total = $netto_total;
-    
+
         // Simpan perubahan data transaksi
         $transaction->save();
-    
+
         // Redirect atau lakukan tindakan selanjutnya
         return redirect()->route('transactions.index');
     }
