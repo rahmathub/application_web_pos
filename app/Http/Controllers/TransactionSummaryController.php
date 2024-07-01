@@ -47,7 +47,7 @@ class TransactionSummaryController extends Controller
         return round($percentageChange, 2); // Membulatkan ke dua desimal
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $total_keuntungan = DB::table('transactions')->sum('netto_total');
         $total_customers = DB::table('transactions')->sum('customer_id');
@@ -127,9 +127,12 @@ class TransactionSummaryController extends Controller
             ->with('product') // Asumsikan ada relasi 'product' di model TransactionDetail
             ->get();
 
-        // Keuntungan harian di buatkan char
-        $startOfMonth = Carbon::now()->startOfMonth();
-        $endOfMonth = Carbon::now()->endOfMonth();
+        // chart Keuntungan harian
+        $selectedMonth = $request->input('selected_month', Carbon::now()->month);
+
+        // Ambil data berdasarkan bulan yang dipilih
+        $startOfMonth = Carbon::now()->setMonth($selectedMonth)->startOfMonth();
+        $endOfMonth = Carbon::now()->setMonth($selectedMonth)->endOfMonth();
 
         $dailyProfits = DB::table('transactions')
             ->select(DB::raw('DATE(transaction_datetime) as date'), DB::raw('SUM(netto_total) as total_profit'))
@@ -175,7 +178,8 @@ class TransactionSummaryController extends Controller
                 'profitPercentageChange',
                 'topProducts',
                 'chartData',
-                'dates'
+                'dates',
+                'selectedMonth'
             )
         );
     }

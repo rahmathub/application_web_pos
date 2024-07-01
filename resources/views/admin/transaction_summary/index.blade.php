@@ -160,10 +160,48 @@
             </div>
 
             {{-- bagian keuntungan Harian --}}
+            {{-- Bagian keuntungan Harian --}}
             <div class="card-footer col-lg-12">
                 <div class="card">
                     <div class="card-header border-0">
                         <h3 class="card-title">Keuntungan Harian</h3>
+                        <div class="card-tools">
+                            <form action="{{ route('admin.transaction_summary.index') }}" method="GET">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                    <select name="selected_month" class="form-control float-right">
+                                        <option value="1" @if ($selectedMonth == 1) selected @endif>Januari
+                                        </option>
+                                        <option value="2" @if ($selectedMonth == 2) selected @endif>Februari
+                                        </option>
+                                        <option value="3" @if ($selectedMonth == 3) selected @endif>Maret
+                                        </option>
+                                        <option value="4" @if ($selectedMonth == 4) selected @endif>April
+                                        </option>
+                                        <option value="5" @if ($selectedMonth == 5) selected @endif>Mei
+                                        </option>
+                                        <option value="6" @if ($selectedMonth == 6) selected @endif>Juni
+                                        </option>
+                                        <option value="7" @if ($selectedMonth == 7) selected @endif>Juli
+                                        </option>
+                                        <option value="8" @if ($selectedMonth == 8) selected @endif>Agustus
+                                        </option>
+                                        <option value="9" @if ($selectedMonth == 9) selected @endif>September
+                                        </option>
+                                        <option value="10" @if ($selectedMonth == 10) selected @endif>Oktober
+                                        </option>
+                                        <option value="11" @if ($selectedMonth == 11) selected @endif>November
+                                        </option>
+                                        <option value="12" @if ($selectedMonth == 12) selected @endif>Desember
+                                        </option>
+                                    </select>
+
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default"><i
+                                                class="fas fa-check"> Klik Cek</i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="position-relative mb-4">
@@ -172,6 +210,7 @@
                     </div>
                 </div>
             </div>
+
 
             {{-- bagian keuntungan tahunan --}}
             <div class="card-footer col-lg-12">
@@ -384,7 +423,7 @@
                     }
                 }
             });
-    
+
             // Chart untuk penjualan Jul-Dec
             var ctx2 = document.getElementById('sales-chart2').getContext('2d');
             var salesChart2 = new Chart(ctx2, {
@@ -449,7 +488,7 @@
             });
         });
     </script>
-    
+
 
     {{-- code untuk chart keuntungan harian --}}
     <script>

@@ -52,6 +52,8 @@ Route::get('store/{store}', [StoreController::class, 'show'])->name('store.show'
 Route::get('note_buyer/{store}/create', [Note_buyerController::class, 'create'])->name('note_buyer.create');
 
 
+Route::get('/admin/transaction-summary', [TransactionSummaryController::class, 'index'])
+    ->name('admin.transaction_summary.index');
 
 // API
 Route::get('/api/products', [App\Http\Controllers\ProductController::class, 'api']);
