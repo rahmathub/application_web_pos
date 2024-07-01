@@ -51,7 +51,7 @@ Route::get('store/{store}', [StoreController::class, 'show'])->name('store.show'
 // untuk bisa create dari tombol create ke halaman create yang membawa id dari table store
 Route::get('note_buyer/{store}/create', [Note_buyerController::class, 'create'])->name('note_buyer.create');
 
-
+// untuk filter keuntungan harian sesuai bulan
 Route::get('/admin/transaction-summary', [TransactionSummaryController::class, 'index'])
     ->name('admin.transaction_summary.index');
 
