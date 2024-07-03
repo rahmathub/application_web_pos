@@ -18,6 +18,9 @@ if ($currentYear > $startYear) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title id="app">@{{ pageTitle }}</title>
+    {{-- Icon Jendela Web --}}
+    <link rel="icon" href="{{ asset('assets/shop-solid.svg') }}" type="image/svg+xml">
+
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
